@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/api_client/home_store_api_client.dart';
+import 'package:online_store/domain/entity/best_seller_entity.dart';
 import 'package:online_store/domain/entity/home_store_data.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
@@ -228,10 +229,10 @@ class _HomeStoreBannerWidget extends StatelessWidget {
     final products = model.data?.hotSales;
     return CarouselSlider.builder(
       itemCount: products?.length,
-      itemBuilder:
-          (BuildContext context, int itemIndex, int pageViewIndex) =>
-              _HomeStoreBannerImageWidget(productIndex: itemIndex,
-          ),
+      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+          _HomeStoreBannerImageWidget(
+        productIndex: itemIndex,
+      ),
       options: CarouselOptions(
         autoPlay: true,
         height: 175,
@@ -243,7 +244,9 @@ class _HomeStoreBannerWidget extends StatelessWidget {
 
 class _HomeStoreBannerImageWidget extends StatelessWidget {
   final int productIndex;
-  const _HomeStoreBannerImageWidget({Key? key, required this.productIndex}) : super(key: key);
+
+  const _HomeStoreBannerImageWidget({Key? key, required this.productIndex})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +267,9 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
         // margin: EdgeInsets.all(10),
         height: 175,
         width: double.infinity,
-        child: _HomeStoreBannerInfoWidget(product: product,));
+        child: _HomeStoreBannerInfoWidget(
+          product: product,
+        ));
   }
 }
 
@@ -290,7 +295,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
                     color: AppColors.orange,
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       'New',
                       style: TextStyle(
@@ -301,29 +306,27 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
                     ),
                   ),
                 )
-              : SizedBox(),
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.title,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 25,
-                      color: Colors.white),
-                ),
-                Text(
-                  product.subtitle,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 11,
-                      color: Colors.white),
-                ),
-              ],
-            ),
+              : const SizedBox(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product.title,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                    color: Colors.white),
+              ),
+              Text(
+                product.subtitle,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 11,
+                    color: Colors.white),
+              ),
+            ],
           ),
-          Container(
+          SizedBox(
             width: 98,
             height: 23,
             child: ElevatedButton(
@@ -331,7 +334,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
                 primary: Colors.white,
               ),
               onPressed: () {},
-              child: Text(
+              child: const Text(
                 'Buy now!',
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
@@ -351,9 +354,105 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<HomeStoreModel>();
+    final bestSellers = model.data?.bestSeller;
+    return GridView.builder(
+
+      primary: false,
+      shrinkWrap: true,
+      itemCount: bestSellers?.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemBuilder: (context, index) {
+        return _ProductCardWidget();
+        return _HomeStoreBestSellerCardWidget(
+          product: bestSellers![index],
+        );
+      },
+    );
+  }
+}
+
+class _HomeStoreBestSellerCardWidget extends StatelessWidget {
+  final BestSellerEntity product;
+
+  const _HomeStoreBestSellerCardWidget({Key? key, required this.product})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(0),
+      elevation: 1,
+      child: Container(
+        height: 227,
+        child: ListTile(
+          title: Container(
+            // padding: EdgeInsets.all(0),
+            color: Colors.grey,
+            height: 168,
+            child: Image.network(
+              product.picture,
+              fit: BoxFit.cover,
+            ),
+          ),
+          subtitle: Column(
+            children: [
+              Row(
+                children: [
+                  Text('\$1,047'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductCardWidget extends StatelessWidget {
+  const _ProductCardWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      height: 500,
-      color: Colors.green,
+      color: Colors.blue,
+      height: 227,
+      child: Column(
+        children: [
+          Container(
+            height: 168,
+            width: double.infinity,
+            color: Colors.green,
+            child: IconButton(
+              alignment: Alignment.topRight,
+              onPressed: () {},
+              icon: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Icon(Icons.wb_sunny_sharp),
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              Row(
+            children: [
+              Text('Text'),
+              Text('Text'),
+            ],
+              ),
+              Text('Text'),
+
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
