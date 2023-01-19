@@ -356,19 +356,33 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     final bestSellers = model.data?.bestSeller;
-    return GridView.builder(
-
+    return ListView.builder(
       primary: false,
       shrinkWrap: true,
-      itemCount: bestSellers?.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemCount: bestSellers!.length ~/ 2,
       itemBuilder: (context, index) {
-        return _ProductCardWidget();
-        return _HomeStoreBestSellerCardWidget(
-          product: bestSellers![index],
+        //return _ProductCardWidget();
+        return _HomeStoreBestSellerRowCardWidget(
+          index: index * 2,
         );
       },
+    );
+  }
+}
+
+class _HomeStoreBestSellerRowCardWidget extends StatelessWidget {
+  final int index;
+
+  const _HomeStoreBestSellerRowCardWidget({Key? key, required this.index})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: _ProductCardWidget(index: index)),
+        Expanded(child: _ProductCardWidget(index: index + 1)),
+      ],
     );
   }
 }
@@ -400,7 +414,8 @@ class _HomeStoreBestSellerCardWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text('\$1,047'),
+                  Text('\$${product.discountPrice}'),
+                  Text('\$${product.priceWithoutDiscount}'),
                 ],
               ),
             ],
@@ -412,46 +427,77 @@ class _HomeStoreBestSellerCardWidget extends StatelessWidget {
 }
 
 class _ProductCardWidget extends StatelessWidget {
-  const _ProductCardWidget({Key? key}) : super(key: key);
+  final int index;
+
+  const _ProductCardWidget({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      height: 227,
-      child: Column(
-        children: [
-          Container(
-            height: 168,
-            width: double.infinity,
-            color: Colors.green,
-            child: IconButton(
-              alignment: Alignment.topRight,
-              onPressed: () {},
-              icon: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(13),
+    final product =
+        context.select((HomeStoreModel model) => model.data?.bestSeller[index]);
+    final isFavoriteIcon = product!.isFavorites
+        ? Image.asset('assets/images/Favorite.png')
+        : Image.asset('assets/images/notFavorite.png');
+    return Card(
+      child: Container(
+        color: Colors.white,
+        height: 227,
+        child: Column(
+          children: [
+            Container(
+              height: 168,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(product!.picture),
+                      fit: BoxFit.fitHeight)),
+              width: double.infinity,
+              // color: Colors.green,
+              child: IconButton(
+                alignment: Alignment.topRight,
+                onPressed: () {},
+                icon: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: isFavoriteIcon,
                 ),
-                child: Icon(Icons.wb_sunny_sharp),
               ),
             ),
-          ),
-          Column(
-            children: [
-              Row(
-            children: [
-              Text('Text'),
-              Text('Text'),
-            ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 21.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('\$${product.discountPrice}',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.dark)),
+                      SizedBox(width: 7),
+                      Text('\$${product.priceWithoutDiscount}',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey,
+                              decoration: TextDecoration.lineThrough)),
+                    ],
+                  ),
+                  Text(product!.title,
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.dark)),
+                ],
               ),
-              Text('Text'),
-
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
