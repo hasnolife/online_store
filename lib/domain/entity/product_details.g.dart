@@ -6,8 +6,8 @@ part of 'product_details.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-productDetails _$productDetailsFromJson(Map<String, dynamic> json) =>
-    productDetails(
+ProductDetails _$ProductDetailsFromJson(Map<String, dynamic> json) =>
+    ProductDetails(
       json['CPU'] as String,
       json['camera'] as String,
       (json['capacity'] as List<dynamic>).map((e) => e as String).toList(),
@@ -22,7 +22,7 @@ productDetails _$productDetailsFromJson(Map<String, dynamic> json) =>
       json['title'] as String,
     );
 
-Map<String, dynamic> _$productDetailsToJson(productDetails instance) =>
+Map<String, dynamic> _$ProductDetailsToJson(ProductDetails instance) =>
     <String, dynamic>{
       'CPU': instance.cpu,
       'camera': instance.camera,

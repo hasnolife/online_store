@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:online_store/domain/api_client/home_store_api_client.dart';
+import 'package:online_store/domain/api_client/api_client.dart';
 import 'package:online_store/domain/entity/best_seller_entity.dart';
 import 'package:online_store/domain/entity/home_store_data.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
@@ -433,12 +433,14 @@ class _ProductCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<HomeStoreModel>();
     final product =
         context.select((HomeStoreModel model) => model.data?.bestSeller[index]);
     final isFavoriteIcon = product!.isFavorites
         ? Image.asset('assets/images/Favorite.png')
         : Image.asset('assets/images/notFavorite.png');
-    return Card(
+    return InkWell(
+      onTap: () => model.showDetails(context),
       child: Container(
         color: Colors.white,
         height: 227,
