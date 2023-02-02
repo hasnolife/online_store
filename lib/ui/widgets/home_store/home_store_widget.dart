@@ -57,11 +57,11 @@ class _ErrorWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Something is wrong'),
-        Text('Please try again'),
+        const Text('Something is wrong'),
+        const Text('Please try again'),
         ElevatedButton(
           onPressed: () {},
-          child: Text('Restart'),
+          child: const Text('Restart'),
         )
       ],
     );
@@ -331,7 +331,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
             height: 23,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                backgroundColor: Colors.white,
               ),
               onPressed: () {},
               child: const Text(
@@ -396,9 +396,9 @@ class _HomeStoreBestSellerCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
       elevation: 1,
-      child: Container(
+      child: SizedBox(
         height: 227,
         child: ListTile(
           title: Container(
@@ -433,74 +433,109 @@ class _ProductCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
+    final model = context.watch<HomeStoreModel>();
     final product =
         context.select((HomeStoreModel model) => model.data?.bestSeller[index]);
     final isFavoriteIcon = product!.isFavorites
         ? Image.asset('assets/images/Favorite.png')
         : Image.asset('assets/images/notFavorite.png');
-    return InkWell(
-      onTap: () => model.showDetails(context),
-      child: Container(
-        color: Colors.white,
-        height: 227,
-        child: Column(
-          children: [
-            Container(
-              height: 168,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(product!.picture),
-                      fit: BoxFit.fitHeight)),
-              width: double.infinity,
-              // color: Colors.green,
-              child: IconButton(
-                alignment: Alignment.topRight,
-                onPressed: () {},
-                icon: Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: isFavoriteIcon,
+    // final productImage = model.imageLoader(product.picture);
+    // final productImage = buildDecorationImage(product);
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
+          height: 227,
+          child: Column(
+            children: [
+              Container(
+                height: 168,
+                decoration: BoxDecoration(
+                  image: buildDecorationImage(product.picture),
+                  // color: AppColors.dark,
+                ),
+                width: double.infinity,
+
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 21.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('\$${product.discountPrice}',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.dark)),
+                        const SizedBox(width: 7),
+                        Text('\$${product.priceWithoutDiscount}',
+                            style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.grey,
+                                decoration: TextDecoration.lineThrough)),
+                      ],
+                    ),
+                    Text(product.title,
+                        style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.dark)),
+                  ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 21.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('\$${product.discountPrice}',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.dark)),
-                      SizedBox(width: 7),
-                      Text('\$${product.priceWithoutDiscount}',
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.grey,
-                              decoration: TextDecoration.lineThrough)),
-                    ],
-                  ),
-                  Text(product!.title,
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.dark)),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+         SizedBox(
+          // color: Colors.transparent,
+          height: 227,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => model.showDetails(context),
+                    // buildShowSnackBar(context, 'All card'),
+
+          ),
+            ),
+        ),
+        Positioned(
+          top: 5,
+          right: 5,
+          child: IconButton(
+            alignment: Alignment.topRight,
+            onPressed: () => buildShowSnackBar(context, 'Favorite icon'),
+            icon: Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: isFavoriteIcon,
+            ),
+          ),
+        ),
+      ],
     );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildShowSnackBar(BuildContext context, String message) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      message,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+  }
+
+  DecorationImage buildDecorationImage(String productImage) {
+    return DecorationImage(
+        image: NetworkImage(productImage), fit: BoxFit.fitHeight);
   }
 }

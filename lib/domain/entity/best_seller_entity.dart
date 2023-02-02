@@ -9,7 +9,7 @@ class BestSellerEntity {
   final String title;
   final int priceWithoutDiscount;
   final int discountPrice;
-  final String picture;
+  String picture;
 
   BestSellerEntity({
     required this.id,

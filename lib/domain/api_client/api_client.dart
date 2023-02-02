@@ -28,6 +28,19 @@ class ApiClient {
     return null;
   }
 
+  Future<String> tryToLoadImage(String imageUrl) async {
+    try {
+      final url = Uri.parse(imageUrl);
+      final request = await _apiClient.getUrl(url);
+      final response = await request.close();
+      final statusCode = response.statusCode;
+      if (response.statusCode != 200) return Configuration.crashImage;
+    } catch (e) {
+      log(e.toString());
+    }
+    return imageUrl;
+  }
+
   Future<ProductDetails?> getProductDetailsData() async {
     try {
       final url = Uri.parse(Configuration.detailsApi);

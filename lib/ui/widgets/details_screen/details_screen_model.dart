@@ -8,8 +8,12 @@ class ProductDetailsScreenModel extends ChangeNotifier {
 
   final _apiClient = ApiClient();
   ProductDetailsScreenModel() {
-    _futureDetails = _apiClient.getProductDetailsData().then((data) => _productDetails = data);
+   _setup();
   }
   Future<ProductDetails?> get futureDetails => _futureDetails;
   ProductDetails? get productDetails => _productDetails;
+
+  void _setup() {
+    _futureDetails = _apiClient.getProductDetailsData().then((data) => _productDetails = data);
+  }
 }

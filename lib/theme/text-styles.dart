@@ -20,4 +20,18 @@ abstract class AppTextStyles {
       fontWeight: FontWeight.w500,
       letterSpacing: -0.33,
       color: AppColors.orange);
+
+  static const DetailsHeaderTextStyle = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      letterSpacing: -0.33,
+      color: AppColors.dark);
+
+  static const DetailsProductNameTextStyle = TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w500,
+      letterSpacing: -0.33,
+      color: AppColors.dark);
+
+
 }
