@@ -37,11 +37,14 @@ class IconWidget extends StatelessWidget {
 
 class RatingStarsBuilderWidget extends StatelessWidget {
   final double rating;
+  final double size;
+  final Color color;
 
-  const RatingStarsBuilderWidget({Key? key, required this.rating})
+  const RatingStarsBuilderWidget(
+      {Key? key, required this.rating, required this.color, required this.size})
       : super(key: key);
 
-  IconData starIcon(int index) {
+  IconData _starIcon(int index) {
     if (rating > index) {
       return Icons.star;
     } else if (rating < index && rating > index - 1) {
@@ -53,14 +56,13 @@ class RatingStarsBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(starIcon(1)),
-        Icon(starIcon(2)),
-        Icon(starIcon(3)),
-        Icon(starIcon(4)),
-        Icon(starIcon(5)),
-      ],
-    );
+    final List<Icon> starList = List.generate(5, (index) {
+      return Icon(
+        _starIcon(index + 1),
+        color: color,
+        size: size,
+      );
+    });
+    return Row(children: starList);
   }
 }
