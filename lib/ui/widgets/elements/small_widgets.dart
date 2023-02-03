@@ -56,11 +56,15 @@ class RatingStarsBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Icon> starList = List.generate(5, (index) {
-      return Icon(
-        _starIcon(index + 1),
-        color: color,
-        size: size,
+    final List<Padding> starList = List.generate(5, (index) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Icon(
+
+          _starIcon(index + 1),
+          color: color,
+          size: size,
+        ),
       );
     });
     return Row(children: starList);

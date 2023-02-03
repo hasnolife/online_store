@@ -69,7 +69,7 @@ class ProductDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
+      children: const [
         _ProductsDetailsRowHeaderWidget(),
         _ProductDetailsCarouselImageWidget(),
         _ProductDetailsInfoWidget(),
@@ -78,50 +78,20 @@ class ProductDetailsWidget extends StatelessWidget {
   }
 }
 
-class _ProductDetailsHardwareWidget extends StatelessWidget {
-  const _ProductDetailsHardwareWidget({
-    Key? key,
-  }) : super(key: key);
+class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
+  const _ProductDetailsInfoHardwareCategoryWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          buildHardwareDetails(AppImages.processor, product!.cpu),
-          buildHardwareDetails(AppImages.camera, product.camera),
-          buildHardwareDetails(AppImages.ozu, product.ssd),
-          buildHardwareDetails(AppImages.ssd, product.sd),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        buildCategoryHeaders('Shop', true),
+        buildCategoryHeaders('Details', false),
+        buildCategoryHeaders('Features', false),
+      ],
     );
   }
-
-  Expanded buildHardwareDetails(imageName, description) {
-    return Expanded(
-      child: Column(
-        children: [
-          Image.asset(imageName),
-          const SizedBox(height: 7),
-          Text(
-            description,
-            style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProductDetailsInfoWidget extends StatelessWidget {
-  const _ProductDetailsInfoWidget({Key? key}) : super(key: key);
 
   Container buildCategoryHeaders(String text, bool selected) {
     return Container(
@@ -146,74 +116,150 @@ class _ProductDetailsInfoWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ProductDetailsHardwareWidget extends StatelessWidget {
+  const _ProductDetailsHardwareWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
-    final int selectedColor = 0;
+    return Padding(
+      // padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 00),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildHardwareDetails(AppImages.processor, product!.cpu),
+              buildHardwareDetails(AppImages.camera, product.camera),
+              buildHardwareDetails(AppImages.ozu, product.ssd),
+              buildHardwareDetails(AppImages.ssd, product.sd),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container buildHardwareDetails(imageName, description) {
+    return Container(
+
+      child: Column(
+        children: [
+          Container(
+            height: 28,
+            width: 28,
+            child: Image.asset(imageName),
+          ),
+          const SizedBox(height: 7),
+          Text(
+            description,
+            style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w400,
+                color: AppColors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProductDetailsInfoWidget extends StatelessWidget {
+  const _ProductDetailsInfoWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildHeaderRow(product),
-              RatingStarsBuilderWidget(
-                rating: product!.rating,
-                color: AppColors.yellow,
-                size: 18,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  buildCategoryHeaders('Shop', true),
-                  buildCategoryHeaders('Details', false),
-                  buildCategoryHeaders('Features', false),
-                ],
-              ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              _ProductDetailsInfoHeaderWidget(),
+              _ProductDetailsInfoHardwareCategoryWidget(),
               _ProductDetailsHardwareWidget(),
-              Text('Select color and capacity'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: product.color.map((color) {
-                      final isSelected =
-                          product.color.elementAt(selectedColor) == color;
-                      return buildColorChoose(
-                          model.convertColor(color), isSelected);
-                    }).toList(),
-                  ),
-                  Row(
-                    children: product.capacity.map((capacity) {
-                      final isSelected =
-                          product.capacity.elementAt(selectedColor) == capacity;
-                      return buildCapacityChoose(capacity, isSelected);
-                    }).toList(),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Container(
-                  height: 54,
-                  width: double.infinity,
-                  child: Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      buildCartText('Add to Cart'),
-                      buildCartText(model.intToPrice(12345678)),
-                    ],
-                  )),
-                ),
-              ),
+              _ProductDetailsColorCapacityWidget(),
+              _ProductDetailsInfoCartWidget(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
+  const _ProductDetailsInfoHeaderWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<ProductDetailsScreenModel>();
+    final product = model.productDetails;
+    return Column(
+      children: [
+        buildHeaderRow(product),
+        RatingStarsBuilderWidget(
+          rating: product!.rating,
+          color: AppColors.yellow,
+          size: 18,
+        ),
+      ],
+    );
+  }
+
+  Row buildHeaderRow(ProductDetails? product) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          product!.title,
+          style: AppTextStyles.DetailsProductNameTextStyle,
+        ),
+        const IconWidget(
+            backgroundColor: AppColors.dark,
+            icon: Icons.favorite_border,
+            size: 37)
+      ],
+    );
+  }
+}
+
+class _ProductDetailsInfoCartWidget extends StatelessWidget {
+  const _ProductDetailsInfoCartWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<ProductDetailsScreenModel>();
+    final product = model.productDetails;
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.orange,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+      child: Container(
+        height: 54,
+        width: double.infinity,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              buildCartText('Add to Cart'),
+              buildCartText(model.intToPrice(product!.price)),
             ],
           ),
         ),
@@ -224,11 +270,51 @@ class _ProductDetailsInfoWidget extends StatelessWidget {
   Text buildCartText(String text) {
     return Text(
       text,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
+    );
+  }
+}
+
+class _ProductDetailsColorCapacityWidget extends StatelessWidget {
+  const _ProductDetailsColorCapacityWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<ProductDetailsScreenModel>();
+    final product = model.productDetails;
+    final int selectedColor = 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select color and capacity',
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.dark),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: product!.color.map((color) {
+                final isSelected =
+                    product.color.elementAt(selectedColor) == color;
+                return buildColorChoose(model.convertColor(color), isSelected);
+              }).toList(),
+            ),
+            Row(
+              children: product.capacity.map((capacity) {
+                final isSelected =
+                    product.capacity.elementAt(selectedColor) == capacity;
+                return buildCapacityChoose(capacity, isSelected);
+              }).toList(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -237,9 +323,11 @@ class _ProductDetailsInfoWidget extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelect ? AppColors.orange : Colors.transparent,
-          shadowColor: Colors.transparent,
-        ),
+            backgroundColor: isSelect ? AppColors.orange : Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            )),
         onPressed: () {},
         child: Text(
           isSelect ? '$capacity gb'.toUpperCase() : '$capacity gb',
@@ -266,29 +354,13 @@ class _ProductDetailsInfoWidget extends StatelessWidget {
         child: IconButton(
           onPressed: () {},
           icon: selected
-              ? Icon(
+              ? const Icon(
                   Icons.check_rounded,
                   color: Colors.white,
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ),
       ),
-    );
-  }
-
-  Row buildHeaderRow(ProductDetails? product) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          product!.title,
-          style: AppTextStyles.DetailsProductNameTextStyle,
-        ),
-        const IconWidget(
-            backgroundColor: AppColors.dark,
-            icon: Icons.favorite_border,
-            size: 37)
-      ],
     );
   }
 }

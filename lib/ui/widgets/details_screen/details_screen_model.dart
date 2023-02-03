@@ -25,13 +25,15 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     if (stringPrice.length < 4) {
       return '\$$stringPrice.00';
     }
-    for (var i = stringPrice.length; i > 0; i--) {
-      if ((i + 1) % 3 == 0) {
-        final replaceChar = stringPrice[stringPrice.length - i];
-        stringPrice = stringPrice.replaceAll(RegExp(source)
-            replaceChar, ',$replaceChar', i);
-      }
+
+    var newPrice = stringPrice.split('');
+    final counts = stringPrice.length ~/ 3;
+
+    for (var i = 0; i < counts; i++) {
+      newPrice.insert(stringPrice.length - (i + 1) * 3, ',');
     }
+
+    stringPrice = newPrice.join('');
 
     return '\$$stringPrice.00';
   }

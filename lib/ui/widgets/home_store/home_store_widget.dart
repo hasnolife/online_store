@@ -1,49 +1,40 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:online_store/domain/api_client/api_client.dart';
 import 'package:online_store/domain/entity/best_seller_entity.dart';
-import 'package:online_store/domain/entity/home_store_data.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
+import 'package:online_store/domain/resourses/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text-styles.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
 import 'package:online_store/ui/widgets/splash_widget.dart';
 import 'package:provider/provider.dart';
 
-class HomeStoreWidget extends StatefulWidget {
+class HomeStoreWidget extends StatelessWidget {
   const HomeStoreWidget({Key? key}) : super(key: key);
-
-  @override
-  State<HomeStoreWidget> createState() => _HomeStoreWidgetState();
-}
-
-class _HomeStoreWidgetState extends State<HomeStoreWidget> {
-  @override
-  void initState() {
-    // HomeStoreApiClient().getHomeStoreData();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     final data = model.futureData;
     return Scaffold(
-      body: FutureBuilder(
-          future: data,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const _HomeStoreColumnWidget();
-            } else if (snapshot.hasError) {
-              return const _ErrorWidget();
-            } else {
-              return const SplashScreenWidget();
-            }
-            // } else return CircularProgressIndicator(
+      body: SafeArea(
+        bottom: false,
+        child: FutureBuilder(
+            future: data,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const _HomeStoreColumnWidget();
+              } else if (snapshot.hasError) {
+                return const _ErrorWidget();
+              } else {
+                return const SplashScreenWidget();
+              }
+              // } else return CircularProgressIndicator(
 
-            // );
-          }),
+              // );
+            }),
+      ),
     );
   }
 }
@@ -76,31 +67,46 @@ class _HomeStoreColumnWidget extends StatelessWidget {
     return ListView(
       shrinkWrap: true,
       children: const [
-        _HomeStoreTitleWidget(
-          headerText: 'Select Category',
-          leadingText: 'view all',
-        ),
+        _HomeStoreLocationWidget(),
         _HomeStoreCategoryWidget(),
-        _HomeStoreTitleWidget(
-          headerText: 'Hot sales',
-          leadingText: 'see more',
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: _HomeStoreBannerWidget(),
-        ),
-        _HomeStoreTitleWidget(
-          headerText: 'Best Seller',
-          leadingText: 'see more',
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: _HomeStoreBestSellerWidget(),
-        ),
+        _HomeStoreBannerWidget(),
+        _HomeStoreBestSellerWidget(),
       ],
     );
   }
 }
+
+class _HomeStoreLocationWidget extends StatelessWidget {
+  const _HomeStoreLocationWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(),
+        Row(
+          children: [
+            Icon(Icons.location_on_outlined),
+            Text('Your location'),
+          ],
+        ),
+        Icon(Icons.filter_alt_outlined),
+      ],
+    );
+  }
+}
+
+class _HomeStoreSearchWidget extends StatelessWidget {
+  const _HomeStoreSearchWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Container();
+  }
+}
+
+
 
 class _HomeStoreCategoryWidget extends StatelessWidget {
   const _HomeStoreCategoryWidget({Key? key}) : super(key: key);
@@ -108,30 +114,36 @@ class _HomeStoreCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryList = [
+      CategoryEntity(id: 0, title: 'Phones', icon: AppImages.phonesCategory),
       CategoryEntity(
-          id: 0, title: 'Phones', icon: 'assets/images/Vector-0.png'),
-      CategoryEntity(
-          id: 1, title: 'Computers', icon: 'assets/images/Vector-1.png'),
-      CategoryEntity(
-          id: 2, title: 'Health', icon: 'assets/images/Vector-2.png'),
-      CategoryEntity(id: 3, title: 'Books', icon: 'assets/images/Vector-3.png'),
-      CategoryEntity(id: 4, title: 'Other', icon: 'assets/images/Vector-4.png'),
+          id: 1, title: 'Computers', icon: AppImages.computersCategory),
+      CategoryEntity(id: 2, title: 'Health', icon: AppImages.healthCategory),
+      CategoryEntity(id: 3, title: 'Books', icon: AppImages.booksCategory),
+      CategoryEntity(id: 4, title: 'Other', icon: AppImages.otherCategory),
     ];
-    return SizedBox(
-      height: 130,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
-        child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            primary: true,
-            itemCount: categoryList.length,
-            itemBuilder: (context, index) {
-              return _HomeStoreCategoryIconWidget(
-                  category: categoryList[index]);
-            }),
-      ),
+    return Column(
+      children: [
+        const _HomeStoreTitleWidget(
+          headerText: 'Select Category',
+          leadingText: 'view all',
+        ),
+        SizedBox(
+          height: 130,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+            child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                primary: true,
+                itemCount: categoryList.length,
+                itemBuilder: (context, index) {
+                  return _HomeStoreCategoryIconWidget(
+                      category: categoryList[index]);
+                }),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -227,17 +239,29 @@ class _HomeStoreBannerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     final products = model.data?.hotSales;
-    return CarouselSlider.builder(
-      itemCount: products?.length,
-      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
-          _HomeStoreBannerImageWidget(
-        productIndex: itemIndex,
-      ),
-      options: CarouselOptions(
-        autoPlay: true,
-        height: 175,
-        viewportFraction: 1,
-      ),
+    return Column(
+      children: [
+        const _HomeStoreTitleWidget(
+          headerText: 'Hot sales',
+          leadingText: 'see more',
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: CarouselSlider.builder(
+            itemCount: products?.length,
+            itemBuilder:
+                (BuildContext context, int itemIndex, int pageViewIndex) =>
+                    _HomeStoreBannerImageWidget(
+              productIndex: itemIndex,
+            ),
+            options: CarouselOptions(
+              autoPlay: true,
+              height: 175,
+              viewportFraction: 1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -356,16 +380,27 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     final bestSellers = model.data?.bestSeller;
-    return ListView.builder(
-      primary: false,
-      shrinkWrap: true,
-      itemCount: bestSellers!.length ~/ 2,
-      itemBuilder: (context, index) {
-        //return _ProductCardWidget();
-        return _HomeStoreBestSellerRowCardWidget(
-          index: index * 2,
-        );
-      },
+    return Column(
+      children: [
+        const _HomeStoreTitleWidget(
+          headerText: 'Best Seller',
+          leadingText: 'see more',
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          child: ListView.builder(
+            primary: false,
+            shrinkWrap: true,
+            itemCount: bestSellers!.length ~/ 2,
+            itemBuilder: (context, index) {
+              //return _ProductCardWidget();
+              return _HomeStoreBestSellerRowCardWidget(
+                index: index * 2,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -455,7 +490,6 @@ class _ProductCardWidget extends StatelessWidget {
                   // color: AppColors.dark,
                 ),
                 width: double.infinity,
-
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 21.0),
@@ -490,17 +524,16 @@ class _ProductCardWidget extends StatelessWidget {
             ],
           ),
         ),
-         SizedBox(
+        SizedBox(
           // color: Colors.transparent,
           height: 227,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => model.showDetails(context),
-                    // buildShowSnackBar(context, 'All card'),
-
-          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => model.showDetails(context),
+              // buildShowSnackBar(context, 'All card'),
             ),
+          ),
         ),
         Positioned(
           top: 5,
@@ -523,15 +556,16 @@ class _ProductCardWidget extends StatelessWidget {
     );
   }
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildShowSnackBar(BuildContext context, String message) {
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildShowSnackBar(
+      BuildContext context, String message) {
     return ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      message,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 
   DecorationImage buildDecorationImage(String productImage) {
