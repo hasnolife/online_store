@@ -145,6 +145,7 @@ class _HomeStoreLocationWidget extends StatelessWidget {
 class _HomeStoreFilterContentWidget extends StatelessWidget {
   const _HomeStoreFilterContentWidget({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -154,10 +155,10 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           buildHeader(context),
-          buildDropdownMenu(
-            'Brand',
-            'Samsung',
-            generateMenuItem(
+          _DropDownWidget(
+            title: 'Brand',
+            initial: 'Samsung',
+            menuItems: generateMenuItem(
               [
                 'Samsung',
                 'Xiaomi',
@@ -165,10 +166,10 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
               ],
             ),
           ),
-          buildDropdownMenu(
-            'Prise',
-            '\$300 - \$500',
-            generateMenuItem(
+          _DropDownWidget(
+            title:'Prise',
+            initial: '\$300 - \$500',
+            menuItems: generateMenuItem(
               [
                 '\$100 - \$300',
                 '\$300 - \$500',
@@ -177,10 +178,10 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
               ],
             ),
           ),
-          buildDropdownMenu(
-            'Size',
-            '4.5 to 5.5 inches',
-            generateMenuItem(
+          _DropDownWidget(
+            title:'Size',
+            initial: '4.5 to 5.5 inches',
+            menuItems: generateMenuItem(
               [
                 '4.5 to 5.5 inches',
                 '5.5 to 6.5 inches',
@@ -196,7 +197,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
   List<DropdownMenuItem<String>> generateMenuItem(List<String> menuNames) {
     return List.generate(
       menuNames.length,
-      (index) => DropdownMenuItem(
+      (index) => DropdownMenuItem<String>(
           value: menuNames[index],
           child: Text(
             menuNames[index],
@@ -209,41 +210,6 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
     );
   }
 
-  Widget buildDropdownMenu(
-      String title, String initial, List<DropdownMenuItem<String>> menuItems) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: AppColors.dark,
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: AppColors.grey),
-          ),
-          height: 37,
-          width: double.infinity,
-          child: DropdownButton(
-            borderRadius: BorderRadius.circular(5),
-            icon: const Icon(Icons.expand_more_rounded),
-            underline: Container(color: Colors.transparent),
-            isExpanded: true,
-            items: menuItems,
-            onChanged: (value) {},
-            value: initial,
-          ),
-        ),
-      ],
-    );
-  }
 
   Row buildHeader(BuildContext context) {
     return Row(
@@ -292,6 +258,64 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
     );
   }
 }
+
+class _DropDownWidget extends StatefulWidget {
+  final String title;
+      String initial;
+  final List<DropdownMenuItem<String>> menuItems;
+   _DropDownWidget({Key? key, required this.title, required this.initial, required this.menuItems}) : super(key: key);
+
+  @override
+  State<_DropDownWidget> createState() => _DropDownWidgetState();
+}
+
+class _DropDownWidgetState extends State<_DropDownWidget> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: AppColors.dark,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: AppColors.grey),
+          ),
+          height: 37,
+          width: double.infinity,
+          child: DropdownButton(
+            borderRadius: BorderRadius.circular(5),
+            icon: const Icon(Icons.expand_more_rounded),
+            underline: Container(color: Colors.transparent),
+            isExpanded: true,
+            items: widget.menuItems,
+            onChanged: (String? value) {
+              widget.initial = value!;
+
+                setState(() {
+
+                });
+
+            },
+            value: widget.initial,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 class _HomeStoreSearchWidget extends StatelessWidget {
   const _HomeStoreSearchWidget({Key? key}) : super(key: key);
@@ -424,7 +448,8 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int selectedCategory = 0;
+    final model = context.watch<HomeStoreModel>();
+    int selectedCategory = model.selectedCategory;
 
     return Column(
       children: [
@@ -446,7 +471,8 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
                 onTap: selectedCategory == category.id
                     ? null
                     : () {
-                        selectedCategory = category.id;
+                        model.selectedCategory = category.id;
+                        print(model.selectedCategory);
                       },
                 child: Image.asset(
                   category.icon,
@@ -716,7 +742,7 @@ class _ProductCardWidget extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          color: Colors.white,
+          color: AppColors.white,
           height: 227,
           child: Column(
             children: [
@@ -776,8 +802,12 @@ class _ProductCardWidget extends StatelessWidget {
           top: 5,
           right: 5,
           child: IconButton(
+            splashRadius: 1.0,
             alignment: Alignment.topRight,
-            onPressed: () => buildShowSnackBar(context, 'Favorite icon'),
+            onPressed: () {
+              model.toggleFavorite(product);
+              // buildShowSnackBar(context, 'Favorite icon');
+            },
             icon: Container(
               width: 25,
               height: 25,

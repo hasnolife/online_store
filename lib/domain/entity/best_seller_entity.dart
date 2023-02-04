@@ -5,7 +5,7 @@ part 'best_seller_entity.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BestSellerEntity {
   final int id;
-  final bool isFavorites;
+  bool isFavorites;
   final String title;
   final int priceWithoutDiscount;
   final int discountPrice;
