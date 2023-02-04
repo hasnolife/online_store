@@ -25,6 +25,8 @@ class HomeStoreModel extends ChangeNotifier {
     _setup();
   }
 
+
+
   void _checkProductImage(bestSellers) {
     for (var product in bestSellers) {
       _apiClient.tryToLoadImage(product.picture).then((verifiedUrl) {

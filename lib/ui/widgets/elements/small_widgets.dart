@@ -4,6 +4,8 @@ class IconWidget extends StatelessWidget {
   final Color backgroundColor;
   final IconData icon;
   final double size;
+  final double? radius;
+
   final void Function()? onPressed;
 
   const IconWidget({
@@ -12,13 +14,14 @@ class IconWidget extends StatelessWidget {
     required this.icon,
     required this.size,
     this.onPressed,
+    this.radius,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size / 4),
+        borderRadius: BorderRadius.circular(radius ?? 0),
         color: backgroundColor,
       ),
       width: size,
@@ -60,7 +63,6 @@ class RatingStarsBuilderWidget extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: Icon(
-
           _starIcon(index + 1),
           color: color,
           size: size,
@@ -68,5 +70,42 @@ class RatingStarsBuilderWidget extends StatelessWidget {
       );
     });
     return Row(children: starList);
+  }
+}
+
+class AppElevatedButtonWidget extends StatelessWidget {
+  final Color backgroundColor;
+  final Widget title;
+  final double? width;
+  final double? height;
+  final double? radius;
+  final void Function()? onPressed;
+
+  const AppElevatedButtonWidget(
+      {Key? key,
+      required this.backgroundColor,
+      required this.title,
+      this.width,
+      this.height,
+      this.radius,
+      this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius ?? 0))),
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: title,
+      ),
+    );
   }
 }

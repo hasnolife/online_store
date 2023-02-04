@@ -6,6 +6,7 @@ import 'package:online_store/domain/local_entity/category.dart';
 import 'package:online_store/domain/resourses/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/ui/widgets/elements/small_widgets.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
 import 'package:online_store/ui/widgets/splash_widget.dart';
 import 'package:provider/provider.dart';
@@ -69,6 +70,7 @@ class _HomeStoreColumnWidget extends StatelessWidget {
       children: const [
         _HomeStoreLocationWidget(),
         _HomeStoreCategoryWidget(),
+        _HomeStoreSearchWidget(),
         _HomeStoreBannerWidget(),
         _HomeStoreBestSellerWidget(),
       ],
@@ -81,17 +83,211 @@ class _HomeStoreLocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(),
-        Row(
-          children: [
-            Icon(Icons.location_on_outlined),
-            Text('Your location'),
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(
+            width: 50,
+          ),
+          Row(
+            children: const [
+              Icon(
+                Icons.location_on_outlined,
+                color: AppColors.orange,
+                size: 17,
+              ),
+              Text(
+                'Your location',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.dark,
+                ),
+              ),
+              Icon(
+                Icons.expand_more_rounded,
+                color: AppColors.grey,
+                size: 18,
+              )
+            ],
+          ),
+          SizedBox(
+            width: 50,
+            child: IconButton(
+              icon: const Icon(Icons.filter_alt_outlined),
+              onPressed: () => buildShowBottomSheet(context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  PersistentBottomSheetController<dynamic> buildShowBottomSheet(
+      BuildContext context) {
+    return showBottomSheet(
+        backgroundColor: AppColors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(30),
+          ),
         ),
-        Icon(Icons.filter_alt_outlined),
+        enableDrag: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const _HomeStoreFilterContentWidget();
+        });
+  }
+}
+
+class _HomeStoreFilterContentWidget extends StatelessWidget {
+  const _HomeStoreFilterContentWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(30),
+      height: 350,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          buildHeader(context),
+          buildDropdownMenu(
+            'Brand',
+            'Samsung',
+            generateMenuItem(
+              [
+                'Samsung',
+                'Xiaomi',
+                'Apple',
+              ],
+            ),
+          ),
+          buildDropdownMenu(
+            'Prise',
+            '\$300 - \$500',
+            generateMenuItem(
+              [
+                '\$100 - \$300',
+                '\$300 - \$500',
+                '\$500 - \$700',
+                '\$700 - \$1000',
+              ],
+            ),
+          ),
+          buildDropdownMenu(
+            'Size',
+            '4.5 to 5.5 inches',
+            generateMenuItem(
+              [
+                '4.5 to 5.5 inches',
+                '5.5 to 6.5 inches',
+                '6.5+ inches',
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<String>> generateMenuItem(List<String> menuNames) {
+    return List.generate(
+      menuNames.length,
+      (index) => DropdownMenuItem(
+          value: menuNames[index],
+          child: Text(
+            menuNames[index],
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: AppColors.dark,
+            ),
+          )),
+    );
+  }
+
+  Widget buildDropdownMenu(
+      String title, String initial, List<DropdownMenuItem<String>> menuItems) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: AppColors.dark,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: AppColors.grey),
+          ),
+          height: 37,
+          width: double.infinity,
+          child: DropdownButton(
+            borderRadius: BorderRadius.circular(5),
+            icon: const Icon(Icons.expand_more_rounded),
+            underline: Container(color: Colors.transparent),
+            isExpanded: true,
+            items: menuItems,
+            onChanged: (value) {},
+            value: initial,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildHeader(BuildContext context) {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Container(
+            alignment: Alignment.topLeft,
+            child: IconWidget(
+              backgroundColor: AppColors.dark,
+              icon: Icons.close,
+              size: 37,
+              radius: 10,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Container(
+            alignment: Alignment.center,
+            child: const Text('Filter options',
+                style: AppTextStyles.DetailsHeaderTextStyle),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            alignment: Alignment.topRight,
+            child: AppElevatedButtonWidget(
+              backgroundColor: AppColors.orange,
+              title: const Center(
+                  child: Text(
+                'Done',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              )),
+              width: MediaQuery.of(context).size.width / 7,
+              height: 37,
+              radius: 10,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -102,11 +298,52 @@ class _HomeStoreSearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(17)),
+            height: 34,
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search',
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.darkGrey,
+                ),
+                icon: Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Icon(
+                    Icons.search,
+                    color: AppColors.orange,
+                    size: 25,
+                  ),
+                ),
+                iconColor: AppColors.orange,
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 11),
+            child: IconWidget(
+              backgroundColor: AppColors.orange,
+              icon: Icons.dashboard_customize_outlined,
+              size: 34,
+              radius: 17,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
-
-
 
 class _HomeStoreCategoryWidget extends StatelessWidget {
   const _HomeStoreCategoryWidget({Key? key}) : super(key: key);

@@ -148,7 +148,6 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
 
   Container buildHardwareDetails(imageName, description) {
     return Container(
-
       child: Column(
         children: [
           Container(
@@ -228,9 +227,11 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
           style: AppTextStyles.DetailsProductNameTextStyle,
         ),
         const IconWidget(
-            backgroundColor: AppColors.dark,
-            icon: Icons.favorite_border,
-            size: 37)
+          backgroundColor: AppColors.dark,
+          icon: Icons.favorite_border,
+          size: 37,
+          radius: 10,
+        ),
       ],
     );
   }
@@ -251,17 +252,15 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
           shadowColor: Colors.transparent,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-      child: Container(
+      child: SizedBox(
         height: 54,
         width: double.infinity,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              buildCartText('Add to Cart'),
-              buildCartText(model.intToPrice(product!.price)),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            buildCartText('Add to Cart'),
+            buildCartText(model.intToPrice(product!.price)),
+          ],
         ),
       ),
     );
@@ -415,6 +414,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
             backgroundColor: AppColors.dark,
             icon: Icons.arrow_back_ios_new,
             size: 37,
+            radius: 10,
             onPressed: () => Navigator.of(context).pop(),
           ),
           const Text('Product Details',
@@ -423,6 +423,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
             backgroundColor: AppColors.orange,
             icon: Icons.shopping_bag_outlined,
             size: 37,
+            radius: 10,
           ),
         ],
       ),
