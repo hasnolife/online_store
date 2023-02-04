@@ -508,8 +508,9 @@ class _HomeStoreBannerWidget extends StatelessWidget {
           headerText: 'Hot sales',
           leadingText: 'see more',
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
+        Container(
+
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: CarouselSlider.builder(
             itemCount: products?.length,
             itemBuilder:
@@ -542,7 +543,9 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
     final product = products?[productIndex];
 
     return Container(
+       margin: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
+
           color: Colors.black,
           image: DecorationImage(
               image: NetworkImage(
@@ -568,6 +571,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<HomeStoreModel>();
     return Padding(
       padding: const EdgeInsets.only(left: 25.0),
       child: Column(
@@ -620,7 +624,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: () => model.showDetails(context),
               child: const Text(
                 'Buy now!',
                 style: TextStyle(
