@@ -10,7 +10,7 @@ class ProductDetails {
   final List<String> color;
   final String id;
   final List<String> images;
-  final bool isFavorites;
+   bool isFavorites;
   final int price;
   final double rating;
   final String sd;

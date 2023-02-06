@@ -61,7 +61,6 @@ class HomeStoreModel extends ChangeNotifier {
     if (isFilterOpen == true) {
       Navigator.of(context).pop();
       isFilterOpen = false;
-      print(isFilterOpen);
     }
   }
 

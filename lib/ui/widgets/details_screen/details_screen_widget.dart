@@ -1,3 +1,5 @@
+
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/product_details.dart';
@@ -86,16 +88,17 @@ class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildCategoryHeaders('Shop', true),
-        buildCategoryHeaders('Details', false),
-        buildCategoryHeaders('Features', false),
+        buildCategoryHeaders('Shop', context),
+        buildCategoryHeaders('Details', context),
+        buildCategoryHeaders('Features', context),
       ],
     );
   }
 
-  Container buildCategoryHeaders(String text, bool selected) {
+  Container buildCategoryHeaders(String text, BuildContext context) {
+    final model = context.watch<ProductDetailsScreenModel>();
+    final selected = model.selectedCategory == text;
     return Container(
-      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         border: selected
             ? const Border(
@@ -106,12 +109,15 @@ class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
               )
             : null,
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-          color: selected ? AppColors.dark : AppColors.grey,
+      child: TextButton(
+        onPressed: () => model.changeSelectedCategory(text),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? AppColors.dark : AppColors.grey,
+          ),
         ),
       ),
     );
@@ -208,7 +214,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
     final product = model.productDetails;
     return Column(
       children: [
-        buildHeaderRow(product),
+        buildHeaderRow(product, context),
         RatingStarsBuilderWidget(
           rating: product!.rating,
           color: AppColors.yellow,
@@ -218,7 +224,10 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
     );
   }
 
-  Row buildHeaderRow(ProductDetails? product) {
+  Row buildHeaderRow(ProductDetails? product, BuildContext context) {
+    final model = context.watch<ProductDetailsScreenModel>();
+    // final favoriteIcon = product?.isFavorites ==true ? Icons.favorite : Icons.favorite_border;
+    final favoriteIcon = Icons.favorite_border;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -226,11 +235,15 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
           product!.title,
           style: AppTextStyles.DetailsProductNameTextStyle,
         ),
-        const IconWidget(
-          backgroundColor: AppColors.dark,
-          icon: Icons.favorite_border,
+        IconWidget(
+          // backgroundColor: AppColors.dark,
+          backgroundColor: product.isFavorites ? AppColors.orange :AppColors.dark,
+          icon: favoriteIcon,
           size: 37,
           radius: 10,
+          onPressed: () => model.favoriteToggle(),
+          // iconColor: product.isFavorites ? AppColors.orange : null,
+
         ),
       ],
     );
@@ -285,7 +298,7 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
-    final int selectedColor = 0;
+    const int selectedColor = 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

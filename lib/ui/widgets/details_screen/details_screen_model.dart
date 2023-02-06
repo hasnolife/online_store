@@ -5,7 +5,7 @@ import 'package:online_store/domain/entity/product_details.dart';
 class ProductDetailsScreenModel extends ChangeNotifier {
   late final Future<ProductDetails?> _futureDetails;
   late final ProductDetails? _productDetails;
-
+  String selectedCategory = 'Shop';
   final _apiClient = ApiClient();
 
   ProductDetailsScreenModel() {
@@ -36,6 +36,17 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     stringPrice = newPrice.join('');
 
     return '\$$stringPrice.00';
+  }
+
+  void favoriteToggle() {
+    _productDetails?.isFavorites = !_productDetails!.isFavorites;
+    notifyListeners();
+  }
+
+  void changeSelectedCategory(String categoryName) {
+    if (selectedCategory == categoryName) return;
+    selectedCategory = categoryName;
+    notifyListeners();
   }
 
   void _setup() {

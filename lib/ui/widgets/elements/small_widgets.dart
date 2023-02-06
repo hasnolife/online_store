@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconWidget extends StatelessWidget {
   final Color backgroundColor;
+  final Color? iconColor;
   final IconData icon;
   final double size;
   final double? radius;
@@ -15,6 +16,7 @@ class IconWidget extends StatelessWidget {
     required this.size,
     this.onPressed,
     this.radius,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class IconWidget extends StatelessWidget {
         icon: Icon(
           icon,
           size: size / 2,
-          color: Colors.white,
+          color: iconColor ?? Colors.white,
         ),
       ),
     );
@@ -99,8 +101,8 @@ class AppElevatedButtonWidget extends StatelessWidget {
           backgroundColor: backgroundColor,
           elevation: 0,
           shadowColor: Colors.transparent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius ?? 0))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius ?? 0))),
       child: SizedBox(
         height: height,
         width: width,
