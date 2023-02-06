@@ -83,6 +83,7 @@ class _HomeStoreLocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<HomeStoreModel>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -117,7 +118,11 @@ class _HomeStoreLocationWidget extends StatelessWidget {
             width: 50,
             child: IconButton(
               icon: const Icon(Icons.filter_alt_outlined),
-              onPressed: () => buildShowBottomSheet(context),
+              onPressed: () {
+                if (model.isFilterOpen == false) {
+                  model.openFilterDialog(buildShowBottomSheet(context));
+                }
+              },
             ),
           ),
         ],
@@ -145,7 +150,6 @@ class _HomeStoreLocationWidget extends StatelessWidget {
 class _HomeStoreFilterContentWidget extends StatelessWidget {
   const _HomeStoreFilterContentWidget({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -167,7 +171,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
             ),
           ),
           _DropDownWidget(
-            title:'Prise',
+            title: 'Prise',
             initial: '\$300 - \$500',
             menuItems: generateMenuItem(
               [
@@ -179,7 +183,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
             ),
           ),
           _DropDownWidget(
-            title:'Size',
+            title: 'Size',
             initial: '4.5 to 5.5 inches',
             menuItems: generateMenuItem(
               [
@@ -210,8 +214,8 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
     );
   }
 
-
   Row buildHeader(BuildContext context) {
+    final model = context.read<HomeStoreModel>();
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -223,17 +227,14 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
               icon: Icons.close,
               size: 37,
               radius: 10,
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => model.closeFilterDialog(context),
             ),
           ),
         ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            alignment: Alignment.center,
-            child: const Text('Filter options',
-                style: AppTextStyles.DetailsHeaderTextStyle),
-          ),
+        Container(
+          alignment: Alignment.center,
+          child: const Text('Filter options',
+              style: AppTextStyles.DetailsHeaderTextStyle),
         ),
         Expanded(
           child: Container(
@@ -245,12 +246,11 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
                 'Done',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               )),
-              width: MediaQuery.of(context).size.width / 7,
+              width: 50,
+              // width: MediaQuery.of(context).size.width / 6,
               height: 37,
               radius: 10,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => model.closeFilterDialog(context),
             ),
           ),
         ),
@@ -261,19 +261,23 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
 
 class _DropDownWidget extends StatefulWidget {
   final String title;
-      String initial;
+  String initial;
   final List<DropdownMenuItem<String>> menuItems;
-   _DropDownWidget({Key? key, required this.title, required this.initial, required this.menuItems}) : super(key: key);
+
+  _DropDownWidget(
+      {Key? key,
+      required this.title,
+      required this.initial,
+      required this.menuItems})
+      : super(key: key);
 
   @override
   State<_DropDownWidget> createState() => _DropDownWidgetState();
 }
 
 class _DropDownWidgetState extends State<_DropDownWidget> {
-
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -303,10 +307,7 @@ class _DropDownWidgetState extends State<_DropDownWidget> {
             onChanged: (String? value) {
               widget.initial = value!;
 
-                setState(() {
-
-                });
-
+              setState(() {});
             },
             value: widget.initial,
           ),
@@ -315,7 +316,6 @@ class _DropDownWidgetState extends State<_DropDownWidget> {
     );
   }
 }
-
 
 class _HomeStoreSearchWidget extends StatelessWidget {
   const _HomeStoreSearchWidget({Key? key}) : super(key: key);
@@ -509,7 +509,6 @@ class _HomeStoreBannerWidget extends StatelessWidget {
           leadingText: 'see more',
         ),
         Container(
-
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: CarouselSlider.builder(
             itemCount: products?.length,
@@ -543,9 +542,8 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
     final product = products?[productIndex];
 
     return Container(
-       margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-
           color: Colors.black,
           image: DecorationImage(
               image: NetworkImage(

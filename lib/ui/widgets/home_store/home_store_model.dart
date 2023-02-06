@@ -9,12 +9,14 @@ class HomeStoreModel extends ChangeNotifier {
   late final Future<HomeStoreData?> _futureData;
   late final HomeStoreData? _data;
   final _apiClient = ApiClient();
+  bool isFilterOpen = false;
   int _selectedCategory = 0;
 
   set selectedCategory(int value) {
     _selectedCategory = value;
     notifyListeners();
   }
+
   int get selectedCategory => _selectedCategory;
 
   String _productImage = Configuration.crashImage;
@@ -33,10 +35,10 @@ class HomeStoreModel extends ChangeNotifier {
     _setup();
   }
 
-void toggleFavorite(BestSellerEntity product) {
+  void toggleFavorite(BestSellerEntity product) {
     product.isFavorites = !product.isFavorites;
     notifyListeners();
-}
+  }
 
   void _checkProductImage(bestSellers) {
     for (var product in bestSellers) {
@@ -53,6 +55,22 @@ void toggleFavorite(BestSellerEntity product) {
       _checkProductImage(data?.bestSeller);
       return _data = data;
     });
+  }
+
+  void closeFilterDialog(context) {
+    if (isFilterOpen == true) {
+      Navigator.of(context).pop();
+      isFilterOpen = false;
+      print(isFilterOpen);
+    }
+  }
+
+  void openFilterDialog(PersistentBottomSheetController<dynamic> sheet) {
+    if (isFilterOpen == true) {
+      return;
+    }
+    sheet;
+    isFilterOpen = true;
   }
 
   void showDetails(context) {

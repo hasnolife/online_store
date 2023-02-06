@@ -32,6 +32,4 @@ abstract class AppTextStyles {
       fontWeight: FontWeight.w500,
       letterSpacing: -0.33,
       color: AppColors.dark);
-
-
 }
