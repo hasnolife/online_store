@@ -6,6 +6,11 @@ class ProductDetailsScreenModel extends ChangeNotifier {
   late final Future<ProductDetails?> _futureDetails;
   late final ProductDetails? _productDetails;
   String selectedCategory = 'Shop';
+  int selectedColorIndex = 0;
+  int selectedCapacityIndex = 0;
+
+
+
   final _apiClient = ApiClient();
 
   ProductDetailsScreenModel() {
@@ -49,9 +54,29 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setup() {
+  void changeColor(String color) {
+    if (_productDetails!.color[selectedColorIndex] == color) return;
+    selectedColorIndex = _productDetails!.color.indexOf(color);
+    notifyListeners();
+  }
+
+  void changeCapacity(String capacity) {
+    if (_productDetails!.capacity[selectedCapacityIndex] == capacity) return;
+    selectedCapacityIndex = _productDetails!.capacity.indexOf(capacity);
+    notifyListeners();
+  }
+
+  // void _setup() async {
+  //   _productDetails = await _apiClient.getProductDetailsData();
+  //   _futureDetails = _apiClient.getProductDetailsData();
+  //
+  //   selectedColor = _productDetails!.color.first;
+  // }
+
+  void _setup() async {
     _futureDetails = _apiClient
         .getProductDetailsData()
         .then((data) => _productDetails = data);
+    // selectedColor = _productDetails!.color.first;
   }
 }

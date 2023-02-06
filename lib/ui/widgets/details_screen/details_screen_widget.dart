@@ -1,5 +1,3 @@
-
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/product_details.dart';
@@ -227,7 +225,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
   Row buildHeaderRow(ProductDetails? product, BuildContext context) {
     final model = context.watch<ProductDetailsScreenModel>();
     // final favoriteIcon = product?.isFavorites ==true ? Icons.favorite : Icons.favorite_border;
-    final favoriteIcon = Icons.favorite_border;
+    const favoriteIcon = Icons.favorite_border;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -237,13 +235,13 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
         ),
         IconWidget(
           // backgroundColor: AppColors.dark,
-          backgroundColor: product.isFavorites ? AppColors.orange :AppColors.dark,
+          backgroundColor:
+              product.isFavorites ? AppColors.orange : AppColors.dark,
           icon: favoriteIcon,
           size: 37,
           radius: 10,
           onPressed: () => model.favoriteToggle(),
           // iconColor: product.isFavorites ? AppColors.orange : null,
-
         ),
       ],
     );
@@ -298,7 +296,10 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
-    const int selectedColor = 0;
+
+    String selectedColor = product!.color[model.selectedColorIndex];
+    String selectedCapacity = product.capacity.first;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -312,16 +313,12 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
           children: [
             Row(
               children: product!.color.map((color) {
-                final isSelected =
-                    product.color.elementAt(selectedColor) == color;
-                return buildColorChoose(model.convertColor(color), isSelected);
+                return buildColorChoose(color, context);
               }).toList(),
             ),
             Row(
               children: product.capacity.map((capacity) {
-                final isSelected =
-                    product.capacity.elementAt(selectedColor) == capacity;
-                return buildCapacityChoose(capacity, isSelected);
+                return buildCapacityChoose(capacity, context);
               }).toList(),
             ),
           ],
@@ -330,18 +327,16 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
     );
   }
 
-  Padding buildCapacityChoose(String capacity, bool isSelect) {
+  Padding buildCapacityChoose(String capacity, BuildContext context) {
+    final model = context.read<ProductDetailsScreenModel>();
+    final isSelect =
+        capacity == model.productDetails!.capacity[model.selectedCapacityIndex];
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: isSelect ? AppColors.orange : Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            )),
-        onPressed: () {},
-        child: Text(
+      padding: const EdgeInsets.all(0.0),
+      child: AppElevatedButtonWidget(
+        backgroundColor: isSelect ? AppColors.orange : Colors.transparent,
+        radius: 10,
+        title: Text(
           isSelect ? '$capacity gb'.toUpperCase() : '$capacity gb',
           style: TextStyle(
             fontSize: 13,
@@ -349,11 +344,16 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
             color: isSelect ? Colors.white : AppColors.darkGrey,
           ),
         ),
+        onPressed: () => model.changeCapacity(capacity),
       ),
     );
   }
 
-  Padding buildColorChoose(int color, bool selected) {
+  Padding buildColorChoose(String color, BuildContext context) {
+    final model = context.watch<ProductDetailsScreenModel>();
+    final bool selected =
+        model.productDetails?.color[model.selectedColorIndex] == color;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -361,10 +361,10 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Color(color),
+          color: Color(model.convertColor(color)),
         ),
         child: IconButton(
-          onPressed: () {},
+          onPressed: () => model.changeColor(color),
           icon: selected
               ? const Icon(
                   Icons.check_rounded,
