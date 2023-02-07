@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_store/domain/entity/cart.dart';
 import 'package:online_store/ui/widgets/cart/cart_model.dart';
 import 'package:online_store/ui/widgets/cart/cart_widget.dart';
 import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';

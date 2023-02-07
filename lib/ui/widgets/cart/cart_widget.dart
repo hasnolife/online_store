@@ -70,7 +70,7 @@ class _CartHeaderWidget extends StatelessWidget {
             onPressed: () => myMethods.closeRoute(context),
           ),
           Expanded(child: Container()),
-          const Text('Add address', style: AppTextStyles.CartHeaderTextStyle),
+          const Text('Add address', style: AppTextStyles.cartHeaderTextStyle),
           const SizedBox(width: 9),
           const IconWidget(
             backgroundColor: AppColors.orange,
@@ -92,7 +92,7 @@ class _CartTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.only(left: 42),
-      child: Text('My Cart', style: AppTextStyles.CartTitleTextStyle),
+      child: Text('My Cart', style: AppTextStyles.cartTitleTextStyle),
     );
   }
 }
@@ -167,7 +167,7 @@ class _CartInfoProductCardWidget extends StatelessWidget {
 
   Widget buildTrashIcon() {
     return Container(
-      margin: EdgeInsets.only(left: 5),
+      margin: const EdgeInsets.only(left: 5),
       width: 30,
       child: IconButton(
         style: ButtonStyle(
@@ -188,44 +188,43 @@ class _CartInfoProductCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(26),
         color: AppColors.cartCount,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          SizedBox(
-            height: 20,
-            child: Center(
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                  size: 12,
-                ),
-              ),
-            ),
-          ),
           const SizedBox(
-            height: 20,
             child: Text(
               '1',
-              style: AppTextStyles.CartProductTitleTextStyle,
+              style: AppTextStyles.cartProductTitleTextStyle,
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 3),
-            height: 20,
-            child: Center(
-              child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.horizontal_rule_rounded,
-                    color: AppColors.white,
-                    size: 12,
-                  )),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildCountButton('-', {}),
+              buildCountButton('+', {}),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildCountButton(String title, void onTap) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(26),
+      onTap: () => onTap,
+      child: Container(
+        alignment: Alignment.topCenter,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26),
+        ),
+        height: 28,
+        width: 26,
+        child: Text(
+          title,
+          style: AppTextStyles.cartProductTitleTextStyle,
+        ),
       ),
     );
   }
@@ -239,11 +238,11 @@ class _CartInfoProductCardWidget extends StatelessWidget {
           children: [
             Text(
               cartProduct.title,
-              style: AppTextStyles.CartProductTitleTextStyle,
+              style: AppTextStyles.cartProductTitleTextStyle,
             ),
             Text(
               '\$${cartProduct.price}.00',
-              style: AppTextStyles.CartProductPriceTextStyle,
+              style: AppTextStyles.cartProductPriceTextStyle,
             ),
           ],
         ),
@@ -274,6 +273,7 @@ class _CartInfoSummaryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<CartModel>();
     final cartData = model.cartData;
+    final myMethods = MyMethods();
     return Container(
       height: 91,
       decoration: const BoxDecoration(
@@ -285,7 +285,7 @@ class _CartInfoSummaryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildCartSummaryRow('Total', model.intToPrice(cartData.total, false)),
+          buildCartSummaryRow('Total', myMethods.intToPrice(cartData.total, false)),
           buildCartSummaryRow('Delivery', cartData.delivery),
         ],
       ),
@@ -298,11 +298,11 @@ class _CartInfoSummaryWidget extends StatelessWidget {
       children: [
         SizedBox(
           width: 60,
-          child: Text(title, style: AppTextStyles.CartSummaryTitleTextStyle),
+          child: Text(title, style: AppTextStyles.cartSummaryTitleTextStyle),
         ),
         SizedBox(
           width: 80,
-          child: Text(value, style: AppTextStyles.CartSummaryValueTextStyle),
+          child: Text(value, style: AppTextStyles.cartSummaryValueTextStyle),
         ),
       ],
     );
@@ -314,14 +314,14 @@ class _CartInfoButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 125,
       child: Center(
         child: AppElevatedButtonWidget(
           backgroundColor: AppColors.orange,
           title: const Center(
               child:
-                  Text('Checkout', style: AppTextStyles.CartButtonTextStyle)),
+                  Text('Checkout', style: AppTextStyles.cartButtonTextStyle)),
           radius: 10,
           height: 54,
           width: MediaQuery.of(context).size.width * 0.75,

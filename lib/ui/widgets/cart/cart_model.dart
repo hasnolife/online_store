@@ -13,25 +13,8 @@ class CartModel extends ChangeNotifier {
     _setup();
   }
 
-  String intToPrice(int intPrice, bool double) {
-    String stringPrice = intPrice.toString();
-    if (stringPrice.length < 4) {
-      return '\$$stringPrice.00';
-    }
-
-    var newPrice = stringPrice.split('');
-    final counts = stringPrice.length ~/ 3;
-
-    for (var i = 0; i < counts; i++) {
-      newPrice.insert(stringPrice.length - (i + 1) * 3, ',');
-    }
-
-    stringPrice = newPrice.join('');
-    if (double) {
-      return '\$$stringPrice.00';
-    }
-    return '\$$stringPrice us';
-  }
+  void incrementCount() {}
+  void decrementCount() {}
 
 void _setup() {
   _futureCartData = _apiClient.getCartData().then((data) => _cartData = data!);

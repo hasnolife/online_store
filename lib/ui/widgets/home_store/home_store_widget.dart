@@ -327,7 +327,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         Container(
           alignment: Alignment.center,
           child: const Text('Filter options',
-              style: AppTextStyles.DetailsHeaderTextStyle),
+              style: AppTextStyles.detailsHeaderTextStyle),
         ),
         Expanded(
           child: Container(
@@ -521,11 +521,11 @@ class _HomeStoreTitleWidget extends StatelessWidget {
         children: [
           Text(
             headerText,
-            style: AppTextStyles.HeaderTextStyle,
+            style: AppTextStyles.headerTextStyle,
           ),
           Text(
             leadingText,
-            style: AppTextStyles.LinkedHeaderTextStyle,
+            style: AppTextStyles.linkedHeaderTextStyle,
           ),
         ],
       ),
@@ -579,8 +579,8 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
         Text(
           category.title,
           style: selectedCategory == category.id
-              ? AppTextStyles.SelectedHeaderCategoryTextStyle
-              : AppTextStyles.HeaderCategoryTextStyle,
+              ? AppTextStyles.selectedHeaderCategoryTextStyle
+              : AppTextStyles.headerCategoryTextStyle,
         ),
       ],
     );

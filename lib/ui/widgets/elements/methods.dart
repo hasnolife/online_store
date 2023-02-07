@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:online_store/ui/widgets/navigation/main_navigation.dart';
 
 class MyMethods {
-// MyMethods._();
-
-
   String intToPrice(int intPrice, bool double) {
     String stringPrice = intPrice.toString();
     if (stringPrice.length < 4) {
@@ -32,5 +29,4 @@ class MyMethods {
   void closeRoute(BuildContext context) {
     Navigator.of(context).pop();
   }
-
 }

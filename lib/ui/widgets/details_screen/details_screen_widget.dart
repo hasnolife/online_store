@@ -123,25 +123,23 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
     );
   }
 
-  Container buildHardwareDetails(imageName, description) {
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            height: 28,
-            width: 28,
-            child: Image.asset(imageName),
-          ),
-          const SizedBox(height: 7),
-          Text(
-            description,
-            style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grey),
-          ),
-        ],
-      ),
+  Widget buildHardwareDetails(imageName, description) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 28,
+          width: 28,
+          child: Image.asset(imageName),
+        ),
+        const SizedBox(height: 7),
+        Text(
+          description,
+          style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+              color: AppColors.grey),
+        ),
+      ],
     );
   }
 }
@@ -204,7 +202,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
       children: [
         Text(
           product!.title,
-          style: AppTextStyles.DetailsProductNameTextStyle,
+          style: AppTextStyles.detailsProductNameTextStyle,
         ),
         IconWidget(
           // backgroundColor: AppColors.dark,
@@ -401,7 +399,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           onPressed: () => myMethods.closeRoute(context),
         ),
         const Text('Product Details',
-            style: AppTextStyles.DetailsHeaderTextStyle),
+            style: AppTextStyles.detailsHeaderTextStyle),
         IconWidget(
           backgroundColor: AppColors.orange,
           icon: Icons.shopping_bag_outlined,
