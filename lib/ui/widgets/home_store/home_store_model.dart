@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:online_store/configuration/configuration.dart';
 import 'package:online_store/domain/api_client/api_client.dart';
 import 'package:online_store/domain/entity/best_seller_entity.dart';
@@ -54,7 +55,9 @@ class HomeStoreModel extends ChangeNotifier {
   }
 
   void _setup() async {
-
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     _futureData = _apiClient.getHomeStoreData().then((data) {
       _checkProductImage(data?.bestSeller);
       return _data = data;
