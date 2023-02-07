@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/best_seller_entity.dart';
@@ -18,25 +20,17 @@ class HomeStoreWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     final data = model.futureData;
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: FutureBuilder(
-            future: data,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const _HomeStoreColumnWidget();
-              } else if (snapshot.hasError) {
-                return const _ErrorWidget();
-              } else {
-                return const SplashScreenWidget();
-              }
-              // } else return CircularProgressIndicator(
-
-              // );
-            }),
-      ),
-    );
+    return FutureBuilder(
+        future: data,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const _HomeStoreColumnWidget();
+          } else if (snapshot.hasError) {
+            return const _ErrorWidget();
+          } else {
+            return const SplashScreenWidget();
+          }
+        });
   }
 }
 
@@ -65,15 +59,117 @@ class _HomeStoreColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: const [
-        _HomeStoreLocationWidget(),
-        _HomeStoreCategoryWidget(),
-        _HomeStoreSearchWidget(),
-        _HomeStoreBannerWidget(),
-        _HomeStoreBestSellerWidget(),
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          ListView(
+            shrinkWrap: true,
+            children: const [
+              _HomeStoreLocationWidget(),
+              _HomeStoreCategoryWidget(),
+              _HomeStoreSearchWidget(),
+              _HomeStoreBannerWidget(),
+              _HomeStoreBestSellerWidget(),
+            ],
+          ),
+          const _HomeStoreBottomNavigationBarWidget(),
+        ],
+      ),
+      // bottomNavigationBar: _HomeStoreBottomNavigationBarWidget(),
+    );
+  }
+}
+
+class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
+  const _HomeStoreBottomNavigationBarWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // return BottomNavigationBar(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      height: 72,
+      decoration: const BoxDecoration(
+        color: AppColors.dark,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          buildFirstChild(),
+          buildBottomBarItem(const Icon(
+            Icons.shopping_bag_outlined,
+            color: AppColors.white,
+          ),2),
+          buildBottomBarItem(const Icon(
+            Icons.favorite_border,
+            color: AppColors.white,
+          ),2),
+          buildBottomBarItem(const Icon(
+            Icons.person_outline_rounded,
+            color: AppColors.white,
+          ),0),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFirstChild() {
+    return Row(
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: AppColors.white,
+          ),
+        ),
+        const SizedBox(width: 7),
+        const Text(
+          'Explorer',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: AppColors.white,
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget buildBottomBarItem(Icon icon, int count) {
+    return IconButton(
+      icon: Stack(
+        // alignment: Alignment.topRight,
+        children: [
+          icon,
+          count > 0 ? Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              height: 15,
+              width: 15,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(),
+                color: AppColors.orange,
+              ),
+                child: FittedBox(
+                  child: Text('$count',
+              style: TextStyle(color: AppColors.white),
+            ),
+                )),
+          ) : SizedBox(),
+        ],
+      ),
+      onPressed: () {},
     );
   }
 }
@@ -542,7 +638,7 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
     final product = products?[productIndex];
 
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.black,
           image: DecorationImage(

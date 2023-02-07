@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:online_store/theme/app_colors.dart';
+import 'package:online_store/ui/widgets/elements/ecommerce_logo_widget.dart';
 
 class IconWidget extends StatelessWidget {
   final Color backgroundColor;
@@ -108,6 +110,35 @@ class AppElevatedButtonWidget extends StatelessWidget {
         height: height,
         width: width,
         child: title,
+      ),
+    );
+  }
+}
+
+class LoadWidget extends StatelessWidget {
+  const LoadWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(35),
+              color: AppColors.dark,
+            ),
+            width: 70,
+            height: 70,
+            child: const EcommerceLogoWidget(logoSize: 60),
+          ),
+          const CircularProgressIndicator(
+            color: AppColors.orange,
+            // backgroundColor: AppColors.dark,
+            strokeWidth: 6,
+          ),
+        ],
       ),
     );
   }

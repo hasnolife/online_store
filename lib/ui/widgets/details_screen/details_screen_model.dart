@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/api_client/api_client.dart';
 import 'package:online_store/domain/entity/product_details.dart';
+import 'package:online_store/ui/widgets/navigation/main_navigation.dart';
 
 class ProductDetailsScreenModel extends ChangeNotifier {
   late final Future<ProductDetails?> _futureDetails;
@@ -25,7 +26,7 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     return int.parse(stringColor.replaceFirst('#', '0xFF'));
   }
 
-  String intToPrice(int intPrice) {
+  String intToPrice(int intPrice, bool double) {
     String stringPrice = intPrice.toString();
     if (stringPrice.length < 4) {
       return '\$$stringPrice.00';
@@ -39,8 +40,10 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     }
 
     stringPrice = newPrice.join('');
-
-    return '\$$stringPrice.00';
+    if (double) {
+      return '\$$stringPrice.00';
+    }
+    return '\$$stringPrice';
   }
 
   void favoriteToggle() {
@@ -66,12 +69,9 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void _setup() async {
-  //   _productDetails = await _apiClient.getProductDetailsData();
-  //   _futureDetails = _apiClient.getProductDetailsData();
-  //
-  //   selectedColor = _productDetails!.color.first;
-  // }
+  void showCart(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.cart);
+  }
 
   void _setup() async {
     _futureDetails = _apiClient

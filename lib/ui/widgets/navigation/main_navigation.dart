@@ -11,5 +11,6 @@ class MainNavigation {
   final routes = {
     MainNavigationRouteNames.mainScreen : (_) => _screenFactory.makeMainScreen(),
     MainNavigationRouteNames.details : (_) => _screenFactory.makeDetailsScreen(),
+    MainNavigationRouteNames.cart : (_) => _screenFactory.makeCartScreen(),
   };
 }

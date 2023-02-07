@@ -8,5 +8,6 @@ abstract class AppImages {
   static const healthCategory = 'assets/images/Vector-2.png';
   static const booksCategory = 'assets/images/Vector-3.png';
   static const otherCategory = 'assets/images/Vector-4.png';
+  static const trash = 'assets/images/trash.png';
 
 }

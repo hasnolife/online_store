@@ -35,33 +35,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   }
 }
 
-class LoadWidget extends StatelessWidget {
-  const LoadWidget({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(35),
-            color: AppColors.dark,
-          ),
-          width: 70,
-          height: 70,
-          child: const EcommerceLogoWidget(logoSize: 60),
-        ),
-        const CircularProgressIndicator(
-          color: AppColors.orange,
-          // backgroundColor: AppColors.dark,
-          strokeWidth: 6,
-        ),
-      ],
-    ));
-  }
-}
 
 class ProductDetailsWidget extends StatelessWidget {
   const ProductDetailsWidget({Key? key}) : super(key: key);
@@ -270,7 +244,7 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             buildCartText('Add to Cart'),
-            buildCartText(model.intToPrice(product!.price)),
+            buildCartText(model.intToPrice(product!.price, true)),
           ],
         ),
       ),
@@ -296,9 +270,6 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
-
-    String selectedColor = product!.color[model.selectedColorIndex];
-    String selectedCapacity = product.capacity.first;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,28 +389,27 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 42),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconWidget(
-            backgroundColor: AppColors.dark,
-            icon: Icons.arrow_back_ios_new,
-            size: 37,
-            radius: 10,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          const Text('Product Details',
-              style: AppTextStyles.DetailsHeaderTextStyle),
-          const IconWidget(
-            backgroundColor: AppColors.orange,
-            icon: Icons.shopping_bag_outlined,
-            size: 37,
-            radius: 10,
-          ),
-        ],
-      ),
+    final model = context.read<ProductDetailsScreenModel>();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        IconWidget(
+          backgroundColor: AppColors.dark,
+          icon: Icons.arrow_back_ios_new,
+          size: 37,
+          radius: 10,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        const Text('Product Details',
+            style: AppTextStyles.DetailsHeaderTextStyle),
+        IconWidget(
+          backgroundColor: AppColors.orange,
+          icon: Icons.shopping_bag_outlined,
+          size: 37,
+          radius: 10,
+          onPressed: () => model.showCart(context),
+        ),
+      ],
     );
   }
 }
