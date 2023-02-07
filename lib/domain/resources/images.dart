@@ -9,5 +9,4 @@ abstract class AppImages {
   static const booksCategory = 'assets/images/Vector-3.png';
   static const otherCategory = 'assets/images/Vector-4.png';
   static const trash = 'assets/images/trash.png';
-
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/cart.dart';
-import 'package:online_store/domain/resourses/images.dart';
+import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text-styles.dart';
 import 'package:online_store/ui/widgets/cart/cart_model.dart';
+import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -40,10 +41,10 @@ class CartScaffoldWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _CartHeaderWidget(),
-            const _CartTitleWidget(),
-            const _CartInfoWidget(),
+          children: const [
+            _CartHeaderWidget(),
+            _CartTitleWidget(),
+            _CartInfoWidget(),
           ],
         ),
       ),
@@ -56,6 +57,7 @@ class _CartHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final myMethods = MyMethods();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 42.0),
       child: Row(
@@ -65,7 +67,7 @@ class _CartHeaderWidget extends StatelessWidget {
             icon: Icons.arrow_back_ios_new,
             size: 37,
             radius: 10,
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => myMethods.closeRoute(context),
           ),
           Expanded(child: Container()),
           const Text('Add address', style: AppTextStyles.CartHeaderTextStyle),
@@ -102,9 +104,12 @@ class _CartInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.dark,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
+        ),
       ),
       child: Column(
         children: const [
@@ -162,16 +167,16 @@ class _CartInfoProductCardWidget extends StatelessWidget {
 
   Widget buildTrashIcon() {
     return Container(
-       margin: EdgeInsets.only(left: 5),
+      margin: EdgeInsets.only(left: 5),
       width: 30,
       child: IconButton(
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all(EdgeInsets.zero),
-            ),
-            onPressed: () {},
-            icon: Image.asset(AppImages.trash),
-            color: AppColors.deleteCartIcon,
-          ),
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+        ),
+        onPressed: () {},
+        icon: Image.asset(AppImages.trash),
+        color: AppColors.deleteCartIcon,
+      ),
     );
   }
 

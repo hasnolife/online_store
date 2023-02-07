@@ -1,13 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/product_details.dart';
-import 'package:online_store/domain/resourses/images.dart';
+import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text-styles.dart';
 import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';
-import 'package:online_store/ui/widgets/elements/ecommerce_logo_widget.dart';
+import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
-import 'package:online_store/ui/widgets/splash_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailsScreenWidget extends StatelessWidget {
@@ -229,6 +228,7 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
+    final myMethods = MyMethods();
     return ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
@@ -244,7 +244,7 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             buildCartText('Add to Cart'),
-            buildCartText(model.intToPrice(product!.price, true)),
+            buildCartText(myMethods.intToPrice(product!.price, true)),
           ],
         ),
       ),
@@ -389,7 +389,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
+    final myMethods = MyMethods();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -398,7 +398,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           icon: Icons.arrow_back_ios_new,
           size: 37,
           radius: 10,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => myMethods.closeRoute(context),
         ),
         const Text('Product Details',
             style: AppTextStyles.DetailsHeaderTextStyle),
@@ -407,7 +407,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           icon: Icons.shopping_bag_outlined,
           size: 37,
           radius: 10,
-          onPressed: () => model.showCart(context),
+          onPressed: () => myMethods.showCart(context),
         ),
       ],
     );

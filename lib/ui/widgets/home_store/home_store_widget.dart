@@ -1,13 +1,11 @@
-import 'dart:ffi';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:online_store/domain/entity/best_seller_entity.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
-import 'package:online_store/domain/resourses/images.dart';
+import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
 import 'package:online_store/ui/widgets/splash_widget.dart';
@@ -71,6 +69,7 @@ class _HomeStoreColumnWidget extends StatelessWidget {
               _HomeStoreSearchWidget(),
               _HomeStoreBannerWidget(),
               _HomeStoreBestSellerWidget(),
+              SizedBox(height: 52)
             ],
           ),
           const _HomeStoreBottomNavigationBarWidget(),
@@ -82,13 +81,12 @@ class _HomeStoreColumnWidget extends StatelessWidget {
 }
 
 class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
-  const _HomeStoreBottomNavigationBarWidget({
-    super.key,
-  });
+  const _HomeStoreBottomNavigationBarWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // return BottomNavigationBar(
+    final myMethods = MyMethods();
+    final model = context.read<HomeStoreModel>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       height: 72,
@@ -103,18 +101,10 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           buildFirstChild(),
-          buildBottomBarItem(const Icon(
-            Icons.shopping_bag_outlined,
-            color: AppColors.white,
-          ),2),
-          buildBottomBarItem(const Icon(
-            Icons.favorite_border,
-            color: AppColors.white,
-          ),2),
-          buildBottomBarItem(const Icon(
-            Icons.person_outline_rounded,
-            color: AppColors.white,
-          ),0),
+          buildBottomBarItem(Icons.shopping_bag_outlined, model.productCount,
+              () => myMethods.showCart(context)),
+          buildBottomBarItem(Icons.favorite_border, 0, null),
+          buildBottomBarItem(Icons.person_outline_rounded, 0, null),
         ],
       ),
     );
@@ -144,32 +134,39 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
     );
   }
 
-  Widget buildBottomBarItem(Icon icon, int count) {
+  Widget buildBottomBarItem(
+      IconData icon, int count, void Function()? onPressed) {
     return IconButton(
       icon: Stack(
         // alignment: Alignment.topRight,
         children: [
-          icon,
-          count > 0 ? Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              height: 15,
-              width: 15,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(),
-                color: AppColors.orange,
-              ),
-                child: FittedBox(
-                  child: Text('$count',
-              style: TextStyle(color: AppColors.white),
-            ),
-                )),
-          ) : SizedBox(),
+          Icon(
+            icon,
+            color: AppColors.white,
+          ),
+          count > 0
+              ? Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                      height: 15,
+                      width: 15,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(),
+                        color: AppColors.orange,
+                      ),
+                      child: FittedBox(
+                        child: Text(
+                          '$count',
+                          style: const TextStyle(color: AppColors.white),
+                        ),
+                      )),
+                )
+              : const SizedBox(),
         ],
       ),
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }
@@ -568,7 +565,6 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
                     ? null
                     : () {
                         model.selectedCategory = category.id;
-                        print(model.selectedCategory);
                       },
                 child: Image.asset(
                   category.icon,
@@ -783,45 +779,6 @@ class _HomeStoreBestSellerRowCardWidget extends StatelessWidget {
   }
 }
 
-class _HomeStoreBestSellerCardWidget extends StatelessWidget {
-  final BestSellerEntity product;
-
-  const _HomeStoreBestSellerCardWidget({Key? key, required this.product})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(0),
-      elevation: 1,
-      child: SizedBox(
-        height: 227,
-        child: ListTile(
-          title: Container(
-            // padding: EdgeInsets.all(0),
-            color: Colors.grey,
-            height: 168,
-            child: Image.network(
-              product.picture,
-              fit: BoxFit.cover,
-            ),
-          ),
-          subtitle: Column(
-            children: [
-              Row(
-                children: [
-                  Text('\$${product.discountPrice}'),
-                  Text('\$${product.priceWithoutDiscount}'),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _ProductCardWidget extends StatelessWidget {
   final int index;
 
@@ -832,24 +789,23 @@ class _ProductCardWidget extends StatelessWidget {
     final model = context.watch<HomeStoreModel>();
     final product =
         context.select((HomeStoreModel model) => model.data?.bestSeller[index]);
-    final isFavoriteIcon = product!.isFavorites
-        ? Image.asset('assets/images/Favorite.png')
-        : Image.asset('assets/images/notFavorite.png');
-    // final productImage = model.imageLoader(product.picture);
-    // final productImage = buildDecorationImage(product);
+
     return Stack(
       children: [
         Container(
-          color: AppColors.white,
+          margin: const EdgeInsets.all(5),
           height: 227,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Column(
             children: [
               Container(
                 height: 168,
                 decoration: BoxDecoration(
-                  image: buildDecorationImage(product.picture),
-                  // color: AppColors.dark,
-                ),
+                    image: buildDecorationImage(product!.picture),
+                    borderRadius: BorderRadius.circular(10)),
                 width: double.infinity,
               ),
               Padding(
@@ -913,11 +869,19 @@ class _ProductCardWidget extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(13),
               ),
-              child: isFavoriteIcon,
+              child: buildFavoriteIcon(product.isFavorites),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  buildFavoriteIcon(bool isFavorite) {
+    return Icon(
+      isFavorite ? Icons.favorite : Icons.favorite_border_rounded,
+      color: AppColors.orange,
+      size: 15,
     );
   }
 

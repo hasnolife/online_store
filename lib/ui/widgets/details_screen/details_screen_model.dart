@@ -26,26 +26,6 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     return int.parse(stringColor.replaceFirst('#', '0xFF'));
   }
 
-  String intToPrice(int intPrice, bool double) {
-    String stringPrice = intPrice.toString();
-    if (stringPrice.length < 4) {
-      return '\$$stringPrice.00';
-    }
-
-    var newPrice = stringPrice.split('');
-    final counts = stringPrice.length ~/ 3;
-
-    for (var i = 0; i < counts; i++) {
-      newPrice.insert(stringPrice.length - (i + 1) * 3, ',');
-    }
-
-    stringPrice = newPrice.join('');
-    if (double) {
-      return '\$$stringPrice.00';
-    }
-    return '\$$stringPrice';
-  }
-
   void favoriteToggle() {
     _productDetails?.isFavorites = !_productDetails!.isFavorites;
     notifyListeners();
@@ -69,9 +49,7 @@ class ProductDetailsScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showCart(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.cart);
-  }
+
 
   void _setup() async {
     _futureDetails = _apiClient

@@ -1,4 +1,4 @@
- import 'package:online_store/domain/factories/screen_factory.dart';
+import 'package:online_store/domain/factories/screen_factory.dart';
 
 abstract class MainNavigationRouteNames {
   static const mainScreen = '/';
@@ -9,8 +9,8 @@ abstract class MainNavigationRouteNames {
 class MainNavigation {
   static final _screenFactory = ScreenFactory();
   final routes = {
-    MainNavigationRouteNames.mainScreen : (_) => _screenFactory.makeMainScreen(),
-    MainNavigationRouteNames.details : (_) => _screenFactory.makeDetailsScreen(),
-    MainNavigationRouteNames.cart : (_) => _screenFactory.makeCartScreen(),
+    MainNavigationRouteNames.mainScreen: (_) => _screenFactory.makeMainScreen(),
+    MainNavigationRouteNames.details: (_) => _screenFactory.makeDetailsScreen(),
+    MainNavigationRouteNames.cart: (_) => _screenFactory.makeCartScreen(),
   };
 }

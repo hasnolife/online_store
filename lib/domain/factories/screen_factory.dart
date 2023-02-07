@@ -10,10 +10,10 @@ import 'package:provider/provider.dart';
 
 class ScreenFactory {
   Widget makeMainScreen() {
-   return ChangeNotifierProvider<HomeStoreModel>(
-     create: (_) => HomeStoreModel(),
-     child: const HomeStoreWidget(),
-   );
+    return ChangeNotifierProvider<HomeStoreModel>(
+      create: (_) => HomeStoreModel(),
+      child: const HomeStoreWidget(),
+    );
   }
 
   Widget makeDetailsScreen() {
@@ -21,11 +21,12 @@ class ScreenFactory {
       create: (_) => ProductDetailsScreenModel(),
       child: const ProductDetailsScreenWidget(),
     );
-  }Widget makeCartScreen() {
+  }
+
+  Widget makeCartScreen() {
     return ChangeNotifierProvider<CartModel>(
       create: (_) => CartModel(),
       child: const CartWidget(),
     );
   }
 }
-
