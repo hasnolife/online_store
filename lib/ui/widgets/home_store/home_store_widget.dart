@@ -24,7 +24,7 @@ class HomeStoreWidget extends StatelessWidget {
           if (snapshot.hasData) {
             return const _HomeStoreColumnWidget();
           } else if (snapshot.hasError) {
-            return const _ErrorWidget();
+            return const MyErrorWidget();
           } else {
             return const SplashScreenWidget();
           }
@@ -32,25 +32,7 @@ class HomeStoreWidget extends StatelessWidget {
   }
 }
 
-class _ErrorWidget extends StatelessWidget {
-  const _ErrorWidget({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text('Something is wrong'),
-        const Text('Please try again'),
-        ElevatedButton(
-          onPressed: () {},
-          child: const Text('Restart'),
-        )
-      ],
-    );
-  }
-}
 
 class _HomeStoreColumnWidget extends StatelessWidget {
   const _HomeStoreColumnWidget({Key? key}) : super(key: key);

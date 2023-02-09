@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/theme/app_colors.dart';
+import 'package:online_store/theme/text-styles.dart';
 import 'package:online_store/ui/widgets/elements/ecommerce_logo_widget.dart';
+import 'package:online_store/ui/widgets/elements/methods.dart';
 
 class IconWidget extends StatelessWidget {
   final Color backgroundColor;
@@ -138,6 +140,49 @@ class LoadWidget extends StatelessWidget {
             strokeWidth: 6,
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class MyErrorWidget extends StatelessWidget {
+  const MyErrorWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final myMethods = MyMethods();
+    return Scaffold(
+      backgroundColor: AppColors.dark,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const Icon(
+              Icons.warning_amber_rounded,
+              size: 120,
+              color: AppColors.orange,
+            ),
+            const Text(
+              'Something is wrong',
+              style: AppTextStyles.cartProductPriceTextStyle,
+            ),
+            const Text(
+              'Please press Restart button or try again later',
+              style: AppTextStyles.cartSummaryValueTextStyle,
+            ),
+            AppElevatedButtonWidget(
+              onPressed: () => myMethods.restartRouteOnError(context),
+              title: const Center(
+                  child: Text('Restart',
+                      style: AppTextStyles.cartButtonTextStyle)),
+              backgroundColor: AppColors.orange,
+              radius: 10,
+              width: 130,
+            )
+          ],
+        ),
       ),
     );
   }

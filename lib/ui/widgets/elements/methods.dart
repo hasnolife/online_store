@@ -22,8 +22,13 @@ class MyMethods {
     return '\$$stringPrice';
   }
 
+
   void showCart(BuildContext context) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.cart);
+  }
+
+  void restartRouteOnError(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(ModalRoute.of(context)?.settings.name ?? MainNavigationRouteNames.mainScreen);
   }
 
   void closeRoute(BuildContext context) {

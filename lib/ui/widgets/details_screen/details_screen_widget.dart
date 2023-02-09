@@ -24,7 +24,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               if (snapshot.hasData) {
                 return const ProductDetailsWidget();
               } else if (snapshot.hasError) {
-                return const Text("Error");
+                return const MyErrorWidget();
               } else {
                 return const LoadWidget();
               }

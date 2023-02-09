@@ -21,7 +21,7 @@ class CartWidget extends StatelessWidget {
           if (snapshot.hasData) {
             return const CartScaffoldWidget();
           } else if (snapshot.hasError) {
-            return const Text('Error');
+            return const MyErrorWidget();
           }
           return const LoadWidget();
         },
