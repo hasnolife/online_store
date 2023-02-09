@@ -609,7 +609,7 @@ class _HomeStoreBannerWidget extends StatelessWidget {
               productIndex: itemIndex,
             ),
             options: CarouselOptions(
-              autoPlay: true,
+              autoPlay: false,
               height: 175,
               viewportFraction: 1,
             ),
@@ -640,7 +640,7 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
               image: NetworkImage(
                 product!.picture.toString(),
               ),
-              fit: BoxFit.fitHeight),
+              fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(10),
         ),
         // margin: EdgeInsets.all(10),
