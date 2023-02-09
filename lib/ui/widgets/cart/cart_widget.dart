@@ -14,16 +14,18 @@ class CartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<CartModel>();
-    return FutureBuilder(
-      future: model.futureCartData,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return const CartScaffoldWidget();
-        } else if (snapshot.hasError) {
-          return const Text('Error');
-        }
-        return const LoadWidget();
-      },
+    return Scaffold(
+        body: FutureBuilder(
+        future: model.futureCartData,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            return const CartScaffoldWidget();
+          } else if (snapshot.hasError) {
+            return const Text('Error');
+          }
+          return const LoadWidget();
+        },
+      ),
     );
   }
 }
@@ -35,18 +37,16 @@ class CartScaffoldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            _CartHeaderWidget(),
-            _CartTitleWidget(),
-            _CartInfoWidget(),
-          ],
-        ),
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          _CartHeaderWidget(),
+          _CartTitleWidget(),
+          _CartInfoWidget(),
+        ],
       ),
     );
   }
@@ -285,7 +285,8 @@ class _CartInfoSummaryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildCartSummaryRow('Total', myMethods.intToPrice(cartData.total, false)),
+          buildCartSummaryRow(
+              'Total', myMethods.intToPrice(cartData.total, false)),
           buildCartSummaryRow('Delivery', cartData.delivery),
         ],
       ),
