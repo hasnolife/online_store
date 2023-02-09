@@ -310,7 +310,6 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
   Row buildHeader(BuildContext context) {
     final model = context.read<HomeStoreModel>();
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Container(

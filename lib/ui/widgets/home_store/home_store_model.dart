@@ -58,6 +58,7 @@ class HomeStoreModel extends ChangeNotifier {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _futureData = _apiClient.getHomeStoreData().then((data) {
       _checkProductImage(data?.bestSeller);
       return _data = data;
