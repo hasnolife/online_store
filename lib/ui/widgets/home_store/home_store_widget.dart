@@ -4,7 +4,8 @@ import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
-import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/theme/text_consts.dart';
+import 'package:online_store/theme/text_styles.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
@@ -31,8 +32,6 @@ class HomeStoreWidget extends StatelessWidget {
         });
   }
 }
-
-
 
 class _HomeStoreColumnWidget extends StatelessWidget {
   const _HomeStoreColumnWidget({Key? key}) : super(key: key);
@@ -105,7 +104,7 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
         ),
         const SizedBox(width: 7),
         const Text(
-          'Explorer',
+          kBottomNavigationBarHeader,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
@@ -175,7 +174,7 @@ class _HomeStoreLocationWidget extends StatelessWidget {
                 size: 17,
               ),
               Text(
-                'Your location',
+                kLocation,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -235,38 +234,19 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         children: [
           buildHeader(context),
           _DropDownWidget(
-            title: 'Brand',
-            initial: 'Samsung',
-            menuItems: generateMenuItem(
-              [
-                'Samsung',
-                'Xiaomi',
-                'Apple',
-              ],
-            ),
+            title: kDropdownWidgetBrandTitle,
+            initial: kDropdownWidgetBrandList.first,
+            menuItems: generateMenuItem(kDropdownWidgetBrandList),
           ),
           _DropDownWidget(
-            title: 'Prise',
-            initial: '\$300 - \$500',
-            menuItems: generateMenuItem(
-              [
-                '\$100 - \$300',
-                '\$300 - \$500',
-                '\$500 - \$700',
-                '\$700 - \$1000',
-              ],
-            ),
+            title: kDropdownWidgetPriceTitle,
+            initial: kDropdownWidgetPriceList.first,
+            menuItems: generateMenuItem(kDropdownWidgetPriceList),
           ),
           _DropDownWidget(
-            title: 'Size',
-            initial: '4.5 to 5.5 inches',
-            menuItems: generateMenuItem(
-              [
-                '4.5 to 5.5 inches',
-                '5.5 to 6.5 inches',
-                '6.5+ inches',
-              ],
-            ),
+            title: kDropdownWidgetSizeTitle,
+            initial: kDropdownWidgetSizeList.first,
+            menuItems: generateMenuItem(kDropdownWidgetSizeList),
           ),
         ],
       ),
@@ -307,7 +287,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         ),
         Container(
           alignment: Alignment.center,
-          child: const Text('Filter options',
+          child: const Text(kFilterWidgetHeader,
               style: AppTextStyles.detailsHeaderTextStyle),
         ),
         Expanded(
@@ -317,7 +297,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
               backgroundColor: AppColors.orange,
               title: const Center(
                   child: Text(
-                'Done',
+                kFilterDoneButtonText,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               )),
               width: 50,
@@ -410,7 +390,7 @@ class _HomeStoreSearchWidget extends StatelessWidget {
             child: TextFormField(
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: 'Search',
+                hintText: kSearchWidgetHintText,
                 hintStyle: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
@@ -449,18 +429,18 @@ class _HomeStoreCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryList = [
-      CategoryEntity(id: 0, title: 'Phones', icon: AppImages.phonesCategory),
+      CategoryEntity(id: 0, title: kCategoryList[0], icon: AppImages.phonesCategory),
       CategoryEntity(
-          id: 1, title: 'Computers', icon: AppImages.computersCategory),
-      CategoryEntity(id: 2, title: 'Health', icon: AppImages.healthCategory),
-      CategoryEntity(id: 3, title: 'Books', icon: AppImages.booksCategory),
-      CategoryEntity(id: 4, title: 'Other', icon: AppImages.otherCategory),
+          id: 1, title: kCategoryList[1], icon: AppImages.computersCategory),
+      CategoryEntity(id: 2, title: kCategoryList[2], icon: AppImages.healthCategory),
+      CategoryEntity(id: 3, title: kCategoryList[3], icon: AppImages.booksCategory),
+      CategoryEntity(id: 4, title: kCategoryList[4], icon: AppImages.otherCategory),
     ];
     return Column(
       children: [
         const _HomeStoreTitleWidget(
-          headerText: 'Select Category',
-          leadingText: 'view all',
+          headerText: kCategoryHeaderText,
+          leadingText: kViewAllText,
         ),
         SizedBox(
           height: 130,
@@ -578,8 +558,8 @@ class _HomeStoreBannerWidget extends StatelessWidget {
     return Column(
       children: [
         const _HomeStoreTitleWidget(
-          headerText: 'Hot sales',
-          leadingText: 'see more',
+          headerText: kHotSalesHeaderText,
+          leadingText: kSeeMoreText,
         ),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -625,7 +605,6 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
               fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(10),
         ),
-        // margin: EdgeInsets.all(10),
         height: 175,
         width: double.infinity,
         child: _HomeStoreBannerInfoWidget(
@@ -659,7 +638,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'New',
+                      kHotSalesNewIconText,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -697,7 +676,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
               ),
               onPressed: () => model.showDetails(context),
               child: const Text(
-                'Buy now!',
+                kHotSalesButtonText,
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 11,
@@ -721,8 +700,8 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
     return Column(
       children: [
         const _HomeStoreTitleWidget(
-          headerText: 'Best Seller',
-          leadingText: 'see more',
+          headerText: kBestSellersHeaderText,
+          leadingText: kSeeMoreText,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),

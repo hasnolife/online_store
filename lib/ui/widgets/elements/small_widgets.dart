@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/theme/app_colors.dart';
-import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/theme/text_consts.dart';
+import 'package:online_store/theme/text_styles.dart';
 import 'package:online_store/ui/widgets/elements/ecommerce_logo_widget.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 
@@ -160,22 +161,22 @@ class MyErrorWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             const Icon(
-              Icons.warning_amber_rounded,
+              kErrorWidgetIcon,
               size: 120,
               color: AppColors.orange,
             ),
             const Text(
-              'Something is wrong',
+              kErrorWidgetHeader,
               style: AppTextStyles.cartProductPriceTextStyle,
             ),
             const Text(
-              'Please press Restart button or try again later',
+              kErrorWidgetDescription,
               style: AppTextStyles.cartSummaryValueTextStyle,
             ),
             AppElevatedButtonWidget(
               onPressed: () => myMethods.restartRouteOnError(context),
               title: const Center(
-                  child: Text('Restart',
+                  child: Text(kErrorWidgetButtonText,
                       style: AppTextStyles.cartButtonTextStyle)),
               backgroundColor: AppColors.orange,
               radius: 10,

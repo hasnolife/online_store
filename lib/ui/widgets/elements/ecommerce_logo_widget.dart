@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/theme/app_colors.dart';
+import 'package:online_store/theme/text_consts.dart';
 
 class EcommerceLogoWidget extends StatelessWidget {
   const EcommerceLogoWidget({Key? key, required this.logoSize})
@@ -31,11 +32,11 @@ class EcommerceLogoWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Ecommerce',
+                kFirstWord,
                 style: fontStyle,
               ),
               Text(
-                'Concept',
+                kSecondWord,
                 style: fontStyle,
               ),
             ],

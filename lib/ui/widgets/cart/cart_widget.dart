@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/cart.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
-import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/theme/text_consts.dart';
+import 'package:online_store/theme/text_styles.dart';
 import 'package:online_store/ui/widgets/cart/cart_model.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
@@ -70,7 +71,7 @@ class _CartHeaderWidget extends StatelessWidget {
             onPressed: () => myMethods.closeRoute(context),
           ),
           Expanded(child: Container()),
-          const Text('Add address', style: AppTextStyles.cartHeaderTextStyle),
+          const Text(kAddAddress, style: AppTextStyles.cartHeaderTextStyle),
           const SizedBox(width: 9),
           const IconWidget(
             backgroundColor: AppColors.orange,
@@ -92,7 +93,7 @@ class _CartTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.only(left: 42),
-      child: Text('My Cart', style: AppTextStyles.cartTitleTextStyle),
+      child: Text(kMyCart, style: AppTextStyles.cartTitleTextStyle),
     );
   }
 }
@@ -286,8 +287,8 @@ class _CartInfoSummaryWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildCartSummaryRow(
-              'Total', myMethods.intToPrice(cartData.total, false)),
-          buildCartSummaryRow('Delivery', cartData.delivery),
+              kTotal, myMethods.intToPrice(cartData.total, false)),
+          buildCartSummaryRow(kDelivery, cartData.delivery),
         ],
       ),
     );
@@ -322,7 +323,7 @@ class _CartInfoButtonWidget extends StatelessWidget {
           backgroundColor: AppColors.orange,
           title: const Center(
               child:
-                  Text('Checkout', style: AppTextStyles.cartButtonTextStyle)),
+                  Text(kCheckout, style: AppTextStyles.cartButtonTextStyle)),
           radius: 10,
           height: 54,
           width: MediaQuery.of(context).size.width * 0.75,

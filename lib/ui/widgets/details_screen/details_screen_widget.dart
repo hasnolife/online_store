@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:online_store/domain/entity/product_details.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
-import 'package:online_store/theme/text-styles.dart';
+import 'package:online_store/theme/text_consts.dart';
+import 'package:online_store/theme/text_styles.dart';
 import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
@@ -34,8 +35,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   }
 }
 
-
-
 class ProductDetailsWidget extends StatelessWidget {
   const ProductDetailsWidget({Key? key}) : super(key: key);
 
@@ -59,9 +58,9 @@ class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildCategoryHeaders('Shop', context),
-        buildCategoryHeaders('Details', context),
-        buildCategoryHeaders('Features', context),
+        buildCategoryHeaders(kShop, context),
+        buildCategoryHeaders(kDetails, context),
+        buildCategoryHeaders(kFeatures, context),
       ],
     );
   }
@@ -105,7 +104,6 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
     final model = context.read<ProductDetailsScreenModel>();
     final product = model.productDetails;
     return Padding(
-      // padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 30),
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 00),
       child: Column(
         children: [
@@ -135,9 +133,7 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
         Text(
           description,
           style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w400,
-              color: AppColors.grey),
+              fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.grey),
         ),
       ],
     );
@@ -195,7 +191,6 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
 
   Row buildHeaderRow(ProductDetails? product, BuildContext context) {
     final model = context.watch<ProductDetailsScreenModel>();
-    // final favoriteIcon = product?.isFavorites ==true ? Icons.favorite : Icons.favorite_border;
     const favoriteIcon = Icons.favorite_border;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -241,7 +236,7 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            buildCartText('Add to Cart'),
+            buildCartText(kAddToCart),
             buildCartText(myMethods.intToPrice(product!.price, true)),
           ],
         ),
@@ -273,7 +268,7 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Select color and capacity',
+          kSelectColorAndCapacity,
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.dark),
         ),
@@ -306,7 +301,7 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
         backgroundColor: isSelect ? AppColors.orange : Colors.transparent,
         radius: 10,
         title: Text(
-          isSelect ? '$capacity gb'.toUpperCase() : '$capacity gb',
+          isSelect ? '$capacity $kGb'.toUpperCase() : '$capacity $kGb',
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
@@ -398,7 +393,7 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           radius: 10,
           onPressed: () => myMethods.closeRoute(context),
         ),
-        const Text('Product Details',
+        const Text(kProductDetails,
             style: AppTextStyles.detailsHeaderTextStyle),
         IconWidget(
           backgroundColor: AppColors.orange,
