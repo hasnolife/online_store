@@ -16,7 +16,7 @@ class CartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<CartModel>();
     return Scaffold(
-        body: FutureBuilder(
+      body: FutureBuilder(
         future: model.futureCartData,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
@@ -71,7 +71,9 @@ class _CartHeaderWidget extends StatelessWidget {
             onPressed: () => myMethods.closeRoute(context),
           ),
           Expanded(child: Container()),
-          const Text(kAddAddress, style: AppTextStyles.cartHeaderTextStyle),
+          Text(kAddAddress,
+              style:
+                  AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 15)),
           const SizedBox(width: 9),
           const IconWidget(
             backgroundColor: AppColors.orange,
@@ -91,9 +93,10 @@ class _CartTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 42),
-      child: Text(kMyCart, style: AppTextStyles.cartTitleTextStyle),
+    return Padding(
+      padding: const EdgeInsets.only(left: 42),
+      child: Text(kMyCart,
+          style: AppTextStyles.headerTextStyle.copyWith(fontSize: 35)),
     );
   }
 }
@@ -192,10 +195,10 @@ class _CartInfoProductCardWidget extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          const SizedBox(
+          SizedBox(
             child: Text(
               '1',
-              style: AppTextStyles.cartProductTitleTextStyle,
+              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
             ),
           ),
           Column(
@@ -224,7 +227,7 @@ class _CartInfoProductCardWidget extends StatelessWidget {
         width: 26,
         child: Text(
           title,
-          style: AppTextStyles.cartProductTitleTextStyle,
+          style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
         ),
       ),
     );
@@ -239,11 +242,11 @@ class _CartInfoProductCardWidget extends StatelessWidget {
           children: [
             Text(
               cartProduct.title,
-              style: AppTextStyles.cartProductTitleTextStyle,
+              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
             ),
             Text(
               '\$${cartProduct.price}.00',
-              style: AppTextStyles.cartProductPriceTextStyle,
+              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.red),
             ),
           ],
         ),
@@ -304,7 +307,9 @@ class _CartInfoSummaryWidget extends StatelessWidget {
         ),
         SizedBox(
           width: 80,
-          child: Text(value, style: AppTextStyles.cartSummaryValueTextStyle),
+          child: Text(value,
+              style: AppTextStyles.headerTextStyle
+                  .copyWith(fontSize: 15, color: AppColors.white)),
         ),
       ],
     );
@@ -321,9 +326,10 @@ class _CartInfoButtonWidget extends StatelessWidget {
       child: Center(
         child: AppElevatedButtonWidget(
           backgroundColor: AppColors.orange,
-          title: const Center(
-              child:
-                  Text(kCheckout, style: AppTextStyles.cartButtonTextStyle)),
+          title: Center(
+              child: Text(kCheckout,
+                  style: AppTextStyles.headerTextStyle
+                      .copyWith(fontSize: 20, color: AppColors.white))),
           radius: 10,
           height: 54,
           width: MediaQuery.of(context).size.width * 0.75,

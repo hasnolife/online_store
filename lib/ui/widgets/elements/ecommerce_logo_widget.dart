@@ -32,11 +32,11 @@ class EcommerceLogoWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                kFirstWord,
+                kFirstLogoWord,
                 style: fontStyle,
               ),
               Text(
-                kSecondWord,
+                kSecondLogoWord,
                 style: fontStyle,
               ),
             ],

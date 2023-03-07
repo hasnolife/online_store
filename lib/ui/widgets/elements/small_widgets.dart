@@ -146,7 +146,6 @@ class LoadWidget extends StatelessWidget {
   }
 }
 
-
 class MyErrorWidget extends StatelessWidget {
   const MyErrorWidget({Key? key}) : super(key: key);
 
@@ -165,19 +164,23 @@ class MyErrorWidget extends StatelessWidget {
               size: 120,
               color: AppColors.orange,
             ),
-            const Text(
+            Text(
               kErrorWidgetHeader,
-              style: AppTextStyles.cartProductPriceTextStyle,
+              style: AppTextStyles.headerCategoryTextStyle
+                  .copyWith(fontSize: 20, color: AppColors.white)
+                  .copyWith(color: AppColors.red),
             ),
-            const Text(
+            Text(
               kErrorWidgetDescription,
-              style: AppTextStyles.cartSummaryValueTextStyle,
+              style: AppTextStyles.headerTextStyle
+                  .copyWith(fontSize: 15, color: AppColors.white),
             ),
             AppElevatedButtonWidget(
               onPressed: () => myMethods.restartRouteOnError(context),
-              title: const Center(
+              title: Center(
                   child: Text(kErrorWidgetButtonText,
-                      style: AppTextStyles.cartButtonTextStyle)),
+                      style: AppTextStyles.headerTextStyle
+                          .copyWith(fontSize: 20, color: AppColors.white))),
               backgroundColor: AppColors.orange,
               radius: 10,
               width: 130,

@@ -197,7 +197,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
       children: [
         Text(
           product!.title,
-          style: AppTextStyles.detailsProductNameTextStyle,
+          style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 24),
         ),
         IconWidget(
           // backgroundColor: AppColors.dark,
@@ -393,8 +393,8 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           radius: 10,
           onPressed: () => myMethods.closeRoute(context),
         ),
-        const Text(kProductDetails,
-            style: AppTextStyles.detailsHeaderTextStyle),
+        Text(kProductDetails,
+            style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
         IconWidget(
           backgroundColor: AppColors.orange,
           icon: Icons.shopping_bag_outlined,

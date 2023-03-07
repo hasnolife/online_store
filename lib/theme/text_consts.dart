@@ -17,8 +17,8 @@ const kGb = 'gb';
 const kProductDetails = 'Product Details';
 
 // ecommerce_logo_widget
-const kFirstWord = 'Ecommerce';
-const kSecondWord = 'Concept';
+const kFirstLogoWord = 'Ecommerce';
+const kSecondLogoWord = 'Concept';
 
 // small_widgets
 const kErrorWidgetIcon = Icons.warning_amber_rounded;

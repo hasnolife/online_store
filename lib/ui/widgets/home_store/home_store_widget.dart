@@ -287,8 +287,8 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         ),
         Container(
           alignment: Alignment.center,
-          child: const Text(kFilterWidgetHeader,
-              style: AppTextStyles.detailsHeaderTextStyle),
+          child: Text(kFilterWidgetHeader,
+              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
         ),
         Expanded(
           child: Container(
@@ -539,9 +539,7 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
         ),
         Text(
           category.title,
-          style: selectedCategory == category.id
-              ? AppTextStyles.selectedHeaderCategoryTextStyle
-              : AppTextStyles.headerCategoryTextStyle,
+          style: AppTextStyles.headerCategoryTextStyle.copyWith(color: selectedCategory == category.id ? AppColors.orange : AppColors.dark),
         ),
       ],
     );
