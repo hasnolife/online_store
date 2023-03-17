@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_store/domain/blocs/cart_bloc.dart';
 
 import 'package:online_store/ui/widgets/cart/cart_widget.dart';
-import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';
+import 'package:online_store/domain/blocs/details_screen_cubit.dart';
 import 'package:online_store/ui/widgets/details_screen/details_screen_widget.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_widget.dart';
@@ -18,8 +18,8 @@ class ScreenFactory {
   }
 
   Widget makeDetailsScreen() {
-    return ChangeNotifierProvider<ProductDetailsScreenModel>(
-      create: (_) => ProductDetailsScreenModel(),
+    return BlocProvider<ProductDetailsScreenCubit>(
+      create: (_) => ProductDetailsScreenCubit(),
       child: const ProductDetailsScreenWidget(),
     );
   }

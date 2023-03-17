@@ -14,12 +14,12 @@ ProductDetails _$ProductDetailsFromJson(Map<String, dynamic> json) =>
       (json['color'] as List<dynamic>).map((e) => e as String).toList(),
       json['id'] as String,
       (json['images'] as List<dynamic>).map((e) => e as String).toList(),
-      json['isFavorites'] as bool,
       json['price'] as int,
       (json['rating'] as num).toDouble(),
       json['sd'] as String,
       json['ssd'] as String,
       json['title'] as String,
+      isFavorites: json['isFavorites'] as bool,
     );
 
 Map<String, dynamic> _$ProductDetailsToJson(ProductDetails instance) =>

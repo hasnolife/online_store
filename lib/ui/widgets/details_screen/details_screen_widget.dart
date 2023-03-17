@@ -1,31 +1,31 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_store/domain/entity/product_details.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text_consts.dart';
 import 'package:online_store/theme/text_styles.dart';
-import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';
+import 'package:online_store/domain/blocs/details_screen_cubit.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
-import 'package:provider/provider.dart';
 
 class ProductDetailsScreenWidget extends StatelessWidget {
   const ProductDetailsScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
+    final cubit = context.read<ProductDetailsScreenCubit>();
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: FutureBuilder(
-            future: model.futureDetails,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
+        child: BlocBuilder(
+            bloc: cubit,
+            builder: (context, ProductDetailsState state) {
+              if (state.productDetails != null) {
                 return const ProductDetailsWidget();
-              } else if (snapshot.hasError) {
-                return const MyErrorWidget();
+                // } else if (snapshot.hasError) {
+                //   return const MyErrorWidget();
               } else {
                 return const LoadWidget();
               }
@@ -66,8 +66,8 @@ class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
   }
 
   Container buildCategoryHeaders(String text, BuildContext context) {
-    final model = context.watch<ProductDetailsScreenModel>();
-    final selected = model.selectedCategory == text;
+    final cubit = context.watch<ProductDetailsScreenCubit>();
+    final selected = cubit.state.selectedCategory == text;
     return Container(
       decoration: BoxDecoration(
         border: selected
@@ -80,7 +80,7 @@ class _ProductDetailsInfoHardwareCategoryWidget extends StatelessWidget {
             : null,
       ),
       child: TextButton(
-        onPressed: () => model.changeSelectedCategory(text),
+        onPressed: () => cubit.changeSelectedCategory(text),
         child: Text(
           text,
           style: TextStyle(
@@ -101,8 +101,8 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
+    final cubit = context.read<ProductDetailsScreenCubit>();
+    final product = cubit.state.productDetails!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 00),
       child: Column(
@@ -110,7 +110,7 @@ class _ProductDetailsHardwareWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildHardwareDetails(AppImages.processor, product!.cpu),
+              buildHardwareDetails(AppImages.processor, product.cpu),
               buildHardwareDetails(AppImages.camera, product.camera),
               buildHardwareDetails(AppImages.ozu, product.ssd),
               buildHardwareDetails(AppImages.ssd, product.sd),
@@ -175,8 +175,10 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
+    // final cubit = context.watch<ProductDetailsScreenCubit>();
+    // final product = cubit.state.productDetails;
+    final product = context.select(
+        (ProductDetailsScreenCubit cubit) => cubit.state.productDetails);
     return Column(
       children: [
         buildHeaderRow(product, context),
@@ -190,7 +192,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
   }
 
   Row buildHeaderRow(ProductDetails? product, BuildContext context) {
-    final model = context.watch<ProductDetailsScreenModel>();
+    final cubit = context.watch<ProductDetailsScreenCubit>();
     const favoriteIcon = Icons.favorite_border;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +208,7 @@ class _ProductDetailsInfoHeaderWidget extends StatelessWidget {
           icon: favoriteIcon,
           size: 37,
           radius: 10,
-          onPressed: () => model.favoriteToggle(),
+          onPressed: () => cubit.favoriteToggle(),
           // iconColor: product.isFavorites ? AppColors.orange : null,
         ),
       ],
@@ -219,8 +221,8 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
+    final cubit = context.read<ProductDetailsScreenCubit>();
+    final product = cubit.state.productDetails!;
     final myMethods = MyMethods();
     return ElevatedButton(
       onPressed: () {},
@@ -237,7 +239,7 @@ class _ProductDetailsInfoCartWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             buildCartText(kAddToCart),
-            buildCartText(myMethods.intToPrice(product!.price, true)),
+            buildCartText(myMethods.intToPrice(product.price, true)),
           ],
         ),
       ),
@@ -261,8 +263,8 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
+    final cubit = context.watch<ProductDetailsScreenCubit>();
+    final product = cubit.state.productDetails;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,9 +294,10 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
   }
 
   Padding buildCapacityChoose(String capacity, BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
+    final cubit = context.read<ProductDetailsScreenCubit>();
+    final state = cubit.state;
     final isSelect =
-        capacity == model.productDetails!.capacity[model.selectedCapacityIndex];
+        capacity == state.productDetails!.capacity[state.selectedCapacityIndex];
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: AppElevatedButtonWidget(
@@ -308,15 +311,16 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
             color: isSelect ? Colors.white : AppColors.darkGrey,
           ),
         ),
-        onPressed: () => model.changeCapacity(capacity),
+        onPressed: () => cubit.changeCapacity(capacity),
       ),
     );
   }
 
   Padding buildColorChoose(String color, BuildContext context) {
-    final model = context.watch<ProductDetailsScreenModel>();
+    final cubit = context.read<ProductDetailsScreenCubit>();
+    final state = cubit.state;
     final bool selected =
-        model.productDetails?.color[model.selectedColorIndex] == color;
+        state.productDetails?.color[state.selectedColorIndex] == color;
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -325,10 +329,10 @@ class _ProductDetailsColorCapacityWidget extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Color(model.convertColor(color)),
+          color: Color(cubit.convertColor(color)),
         ),
         child: IconButton(
-          onPressed: () => model.changeColor(color),
+          onPressed: () => cubit.changeColor(color),
           icon: selected
               ? const Icon(
                   Icons.check_rounded,
@@ -346,12 +350,12 @@ class _ProductDetailsCarouselImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<ProductDetailsScreenModel>();
-    final product = model.productDetails;
+    final cubit = context.read<ProductDetailsScreenCubit>();
+    final product = cubit.state.productDetails!;
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: CarouselSlider.builder(
-        itemCount: product?.images.length,
+        itemCount: product.images.length,
         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
           return Card(
             shape: RoundedRectangleBorder(
@@ -360,7 +364,7 @@ class _ProductDetailsCarouselImageWidget extends StatelessWidget {
             elevation: 10,
             child: Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Image.network(product!.images[itemIndex]),
+              child: Image.network(product.images[itemIndex]),
             ),
           );
         },
@@ -394,7 +398,8 @@ class _ProductsDetailsRowHeaderWidget extends StatelessWidget {
           onPressed: () => myMethods.closeRoute(context),
         ),
         Text(kProductDetails,
-            style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
+            style:
+                AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
         IconWidget(
           backgroundColor: AppColors.orange,
           icon: Icons.shopping_bag_outlined,
