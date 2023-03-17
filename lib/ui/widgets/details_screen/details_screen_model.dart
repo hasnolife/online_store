@@ -49,8 +49,7 @@ class ProductDetailsScreenModel extends ChangeNotifier {
   }
 
 
-
-  void _setup() async {
+ void _setup() async {
     _futureDetails = _apiClient
         .getProductDetailsData()
         .then((data) => _productDetails = data);
