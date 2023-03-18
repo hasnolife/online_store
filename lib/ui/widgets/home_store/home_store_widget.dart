@@ -1,31 +1,29 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text_consts.dart';
 import 'package:online_store/theme/text_styles.dart';
-import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
-import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
+import 'package:online_store/domain/blocs/home_store_cubit.dart';
 import 'package:online_store/ui/widgets/splash_widget.dart';
-import 'package:provider/provider.dart';
 
 class HomeStoreWidget extends StatelessWidget {
   const HomeStoreWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
-    final data = model.futureData;
-    return FutureBuilder(
-        future: data,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
+    final cubit = context.read<HomeStoreCubit>();
+    return BlocBuilder<HomeStoreCubit, HomeStoreState>(
+        bloc: cubit,
+        builder: (context, state) {
+          if (state.homeStoreData != null) {
             return const _HomeStoreColumnWidget();
-          } else if (snapshot.hasError) {
-            return const MyErrorWidget();
+          // } else if (snapshot.hasError) {
+          //   return const MyErrorWidget();
           } else {
             return const SplashScreenWidget();
           }
@@ -66,8 +64,8 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myMethods = MyMethods();
-    final model = context.read<HomeStoreModel>();
+
+    final cubit = context.read<HomeStoreCubit>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       height: 72,
@@ -82,8 +80,8 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           buildFirstChild(),
-          buildBottomBarItem(Icons.shopping_bag_outlined, model.productCount,
-              () => myMethods.showCart(context)),
+          buildBottomBarItem(Icons.shopping_bag_outlined, cubit.productCount,
+              () => cubit.myMethods.showCart(context)),
           buildBottomBarItem(Icons.favorite_border, 0, null),
           buildBottomBarItem(Icons.person_outline_rounded, 0, null),
         ],
@@ -157,7 +155,7 @@ class _HomeStoreLocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
+    final cubit = context.read<HomeStoreCubit>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -193,8 +191,8 @@ class _HomeStoreLocationWidget extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.filter_alt_outlined),
               onPressed: () {
-                if (model.isFilterOpen == false) {
-                  model.openFilterDialog(buildShowBottomSheet(context));
+                if (cubit.state.isFilterOpen == false) {
+                  cubit.openFilterDialog(buildShowBottomSheet(context));
                 }
               },
             ),
@@ -270,7 +268,7 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
   }
 
   Row buildHeader(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
+    final model = context.read<HomeStoreCubit>();
     return Row(
       children: [
         Expanded(
@@ -502,8 +500,8 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<HomeStoreModel>();
-    int selectedCategory = model.selectedCategory;
+    final cubit = context.watch<HomeStoreCubit>();
+    int selectedCategory = cubit.state.selectedCategory;
 
     return Column(
       children: [
@@ -525,7 +523,7 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
                 onTap: selectedCategory == category.id
                     ? null
                     : () {
-                        model.selectedCategory = category.id;
+                        cubit.selectedCategory = category.id;
                       },
                 child: Image.asset(
                   category.icon,
@@ -551,8 +549,8 @@ class _HomeStoreBannerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
-    final products = model.data?.hotSales;
+    final cubit = context.read<HomeStoreCubit>();
+    final products = cubit.state.homeStoreData?.hotSales;
     return Column(
       children: [
         const _HomeStoreTitleWidget(
@@ -588,8 +586,8 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
-    final products = model.data?.hotSales;
+    final cubit = context.read<HomeStoreCubit>();
+    final products = cubit.state.homeStoreData?.hotSales;
     final product = products?[productIndex];
 
     return Container(
@@ -619,7 +617,7 @@ class _HomeStoreBannerInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
+    final model = context.read<HomeStoreCubit>();
     return Padding(
       padding: const EdgeInsets.only(left: 25.0),
       child: Column(
@@ -693,8 +691,8 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeStoreModel>();
-    final bestSellers = model.data?.bestSeller;
+    final cubit = context.read<HomeStoreCubit>();
+    final bestSellers = cubit.state.homeStoreData?.bestSeller;
     return Column(
       children: [
         const _HomeStoreTitleWidget(
@@ -744,9 +742,9 @@ class _ProductCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<HomeStoreModel>();
+    final cubit = context.watch<HomeStoreCubit>();
     final product =
-        context.select((HomeStoreModel model) => model.data?.bestSeller[index]);
+        context.select((HomeStoreCubit cubit) => cubit.state.homeStoreData?.bestSeller[index]);
 
     return Stack(
       children: [
@@ -805,7 +803,7 @@ class _ProductCardWidget extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => model.showDetails(context),
+              onTap: () => cubit.showDetails(context),
               // buildShowSnackBar(context, 'All card'),
             ),
           ),
@@ -817,7 +815,7 @@ class _ProductCardWidget extends StatelessWidget {
             splashRadius: 1.0,
             alignment: Alignment.topRight,
             onPressed: () {
-              model.toggleFavorite(product);
+              cubit.toggleFavorite(index);
               // buildShowSnackBar(context, 'Favorite icon');
             },
             icon: Container(

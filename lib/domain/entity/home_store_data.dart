@@ -9,13 +9,36 @@ class HomeStoreData {
   List<HotSalesEntity> hotSales;
   List<BestSellerEntity> bestSeller;
 
+  factory HomeStoreData.fromJson(Map<String, dynamic> json) => _$HomeStoreDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HomeStoreDataToJson(this);
+
+//<editor-fold desc="Data Methods">
   HomeStoreData({
     required this.hotSales,
     required this.bestSeller,
   });
 
-  factory HomeStoreData.fromJson(Map<String, dynamic> json) => _$HomeStoreDataFromJson(json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HomeStoreData &&
+          runtimeType == other.runtimeType &&
+          hotSales == other.hotSales &&
+          bestSeller == other.bestSeller);
 
-  Map<String, dynamic> toJson() => _$HomeStoreDataToJson(this);
+  @override
+  int get hashCode => hotSales.hashCode ^ bestSeller.hashCode;
 
+  HomeStoreData copyWith({
+    List<HotSalesEntity>? hotSales,
+    List<BestSellerEntity>? bestSeller,
+  }) {
+    return HomeStoreData(
+      hotSales: hotSales ?? this.hotSales,
+      bestSeller: bestSeller ?? this.bestSeller,
+    );
+  }
+
+//</editor-fold>
 }
