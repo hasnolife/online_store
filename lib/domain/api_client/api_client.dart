@@ -40,22 +40,17 @@ class ApiClient {
   //   return imageUrl;
   // }
 
-  Future<ProductDetails?> getProductDetailsData() async {
-    try {
-      final url = Uri.parse(Configuration.detailsApi);
-      final request = await _apiClient.getUrl(url);
-      final response = await request.close();
-      final jsonStrings = await response.transform(utf8.decoder).toList();
-      final jsonString = jsonStrings.join();
+  Future<ProductDetails> getProductDetailsData() async {
+    final url = Uri.parse(Configuration.detailsApi);
+    final request = await _apiClient.getUrl(url);
+    final response = await request.close();
+    final jsonStrings = await response.transform(utf8.decoder).toList();
+    final jsonString = jsonStrings.join();
 
-      final json = jsonDecode(jsonString) as Map<String, dynamic>;
-      final ProductDetails productDetails = ProductDetails.fromJson(json);
+    final json = jsonDecode(jsonString) as Map<String, dynamic>;
+    final ProductDetails productDetails = ProductDetails.fromJson(json);
 
-      return productDetails;
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
+    return productDetails;
   }
 
   Future<Cart> getCartData() async {
