@@ -88,14 +88,13 @@ class AppElevatedButtonWidget extends StatelessWidget {
   final double? radius;
   final void Function()? onPressed;
 
-  const AppElevatedButtonWidget(
-      {Key? key,
-      required this.backgroundColor,
-      required this.title,
-      this.width,
-      this.height,
-      this.radius,
-      this.onPressed})
+  const AppElevatedButtonWidget({Key? key,
+    required this.backgroundColor,
+    required this.title,
+    this.width,
+    this.height,
+    this.radius,
+    this.onPressed})
       : super(key: key);
 
   @override
@@ -147,7 +146,9 @@ class LoadWidget extends StatelessWidget {
 }
 
 class MyErrorWidget extends StatelessWidget {
-  const MyErrorWidget({Key? key}) : super(key: key);
+  final Object? error;
+
+  const MyErrorWidget({Key? key, this.error}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -164,11 +165,20 @@ class MyErrorWidget extends StatelessWidget {
               size: 120,
               color: AppColors.orange,
             ),
-            Text(
-              kErrorWidgetHeader,
-              style: AppTextStyles.headerCategoryTextStyle
-                  .copyWith(fontSize: 20, color: AppColors.white)
-                  .copyWith(color: AppColors.red),
+            TextButton(
+              onPressed: () {
+                showDialog(context: context, builder: (BuildContext context){
+                  return AlertDialog(
+                   title: Text((error ?? kErrorWidgetNoDescription).toString()),
+                  );
+                });
+              },
+              child: Text((kErrorWidgetHeader),
+
+                style: AppTextStyles.headerCategoryTextStyle
+                    .copyWith(fontSize: 20, color: AppColors.white)
+                    .copyWith(color: AppColors.red),
+              ),
             ),
             Text(
               kErrorWidgetDescription,

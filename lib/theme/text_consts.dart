@@ -25,6 +25,8 @@ const kErrorWidgetIcon = Icons.warning_amber_rounded;
 const kErrorWidgetHeader = 'Something is wrong';
 const kErrorWidgetDescription =
     'Please press Restart button or try again later';
+const kErrorWidgetNoDescription =
+    'No description on this error';
 const kErrorWidgetButtonText = 'Restart';
 
 // home_store_widget

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_store/domain/blocs/cart_bloc.dart';
+import 'package:online_store/domain/blocs/cart_bloc/cart_bloc.dart';
 import 'package:online_store/domain/entity/cart.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
@@ -18,8 +18,10 @@ class CartWidget extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<CartBloc, CartState>(
         builder: (BuildContext context, CartState state) {
-          if (state.cart != null) {
+          if (state is CartLoadedState) {
             return const CartScaffoldWidget();
+          } else if (state is CartLoadingErrorState) {
+            return MyErrorWidget(error: state.error);
           }
           return const LoadWidget();
         },
@@ -129,7 +131,8 @@ class _CartInfoProductListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<CartBloc>();
-    final basket = bloc.state.cart!.basket;
+    final state = bloc.state as CartLoadedState;
+    final basket = state.cart.basket;
 
     return Expanded(
       child: Padding(
@@ -279,8 +282,9 @@ class _CartInfoSummaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<CartBloc>();
+    final state = bloc.state as CartLoadedState;
 
-    final cartData = bloc.state.cart!;
+    final cartData = state.cart;
     final myMethods = MyMethods();
     return Container(
       height: 91,
