@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:online_store/configuration/configuration.dart';
@@ -10,8 +9,7 @@ import 'package:online_store/domain/entity/product_details.dart';
 class ApiClient {
   final _apiClient = HttpClient();
 
-  Future<HomeStoreData?> getHomeStoreData() async {
-    try {
+  Future<HomeStoreData> getHomeStoreData() async {
       final url = Uri.parse(Configuration.homeStoreApi);
       final request = await _apiClient.getUrl(url);
       final response = await request.close();
@@ -21,10 +19,6 @@ class ApiClient {
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
       final HomeStoreData homeStoreData = HomeStoreData.fromJson(json);
       return homeStoreData;
-    } catch (e) {
-      log(e.toString());
-    }
-    return null;
   }
 
   // Future<String> tryToLoadImage(String imageUrl) async {

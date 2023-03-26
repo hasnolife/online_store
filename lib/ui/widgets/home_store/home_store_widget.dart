@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_store/domain/blocs/home_store_cubit/home_store_cubit.dart';
 import 'package:online_store/domain/entity/hot_sales_entity.dart';
 import 'package:online_store/domain/local_entity/category.dart';
 import 'package:online_store/domain/resources/images.dart';
@@ -8,7 +9,6 @@ import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text_consts.dart';
 import 'package:online_store/theme/text_styles.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
-import 'package:online_store/domain/blocs/home_store_cubit.dart';
 import 'package:online_store/ui/widgets/splash_widget.dart';
 
 class HomeStoreWidget extends StatelessWidget {
@@ -20,10 +20,10 @@ class HomeStoreWidget extends StatelessWidget {
     return BlocBuilder<HomeStoreCubit, HomeStoreState>(
         bloc: cubit,
         builder: (context, state) {
-          if (state.homeStoreData != null) {
+          if (state is HomeStoreLoadedState) {
             return const _HomeStoreColumnWidget();
-          // } else if (snapshot.hasError) {
-          //   return const MyErrorWidget();
+          } else if (state is HomeStoreErrorState) {
+            return MyErrorWidget(error: state.error);
           } else {
             return const SplashScreenWidget();
           }
@@ -64,7 +64,6 @@ class _HomeStoreBottomNavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final cubit = context.read<HomeStoreCubit>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -191,7 +190,7 @@ class _HomeStoreLocationWidget extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.filter_alt_outlined),
               onPressed: () {
-                if (cubit.state.isFilterOpen == false) {
+                if (cubit.loadedState.isFilterOpen == false) {
                   cubit.openFilterDialog(buildShowBottomSheet(context));
                 }
               },
@@ -286,7 +285,8 @@ class _HomeStoreFilterContentWidget extends StatelessWidget {
         Container(
           alignment: Alignment.center,
           child: Text(kFilterWidgetHeader,
-              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
+              style:
+                  AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 18)),
         ),
         Expanded(
           child: Container(
@@ -427,12 +427,16 @@ class _HomeStoreCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryList = [
-      CategoryEntity(id: 0, title: kCategoryList[0], icon: AppImages.phonesCategory),
+      CategoryEntity(
+          id: 0, title: kCategoryList[0], icon: AppImages.phonesCategory),
       CategoryEntity(
           id: 1, title: kCategoryList[1], icon: AppImages.computersCategory),
-      CategoryEntity(id: 2, title: kCategoryList[2], icon: AppImages.healthCategory),
-      CategoryEntity(id: 3, title: kCategoryList[3], icon: AppImages.booksCategory),
-      CategoryEntity(id: 4, title: kCategoryList[4], icon: AppImages.otherCategory),
+      CategoryEntity(
+          id: 2, title: kCategoryList[2], icon: AppImages.healthCategory),
+      CategoryEntity(
+          id: 3, title: kCategoryList[3], icon: AppImages.booksCategory),
+      CategoryEntity(
+          id: 4, title: kCategoryList[4], icon: AppImages.otherCategory),
     ];
     return Column(
       children: [
@@ -501,7 +505,7 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<HomeStoreCubit>();
-    int selectedCategory = cubit.state.selectedCategory;
+    int selectedCategory = cubit.loadedState.selectedCategory;
 
     return Column(
       children: [
@@ -523,7 +527,7 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
                 onTap: selectedCategory == category.id
                     ? null
                     : () {
-                        cubit.selectedCategory = category.id;
+                        cubit.setSelectedCategory(category.id);
                       },
                 child: Image.asset(
                   category.icon,
@@ -537,7 +541,10 @@ class _HomeStoreCategoryIconWidget extends StatelessWidget {
         ),
         Text(
           category.title,
-          style: AppTextStyles.headerCategoryTextStyle.copyWith(color: selectedCategory == category.id ? AppColors.orange : AppColors.dark),
+          style: AppTextStyles.headerCategoryTextStyle.copyWith(
+              color: selectedCategory == category.id
+                  ? AppColors.orange
+                  : AppColors.dark),
         ),
       ],
     );
@@ -550,7 +557,7 @@ class _HomeStoreBannerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeStoreCubit>();
-    final products = cubit.state.homeStoreData?.hotSales;
+    final products = cubit.loadedState.homeStoreData.hotSales;
     return Column(
       children: [
         const _HomeStoreTitleWidget(
@@ -587,7 +594,7 @@ class _HomeStoreBannerImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeStoreCubit>();
-    final products = cubit.state.homeStoreData?.hotSales;
+    final products = cubit.loadedState.homeStoreData.hotSales;
     final product = products?[productIndex];
 
     return Container(
@@ -692,7 +699,7 @@ class _HomeStoreBestSellerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeStoreCubit>();
-    final bestSellers = cubit.state.homeStoreData?.bestSeller;
+    final bestSellers = cubit.loadedState.homeStoreData.bestSeller;
     return Column(
       children: [
         const _HomeStoreTitleWidget(
@@ -743,8 +750,8 @@ class _ProductCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<HomeStoreCubit>();
-    final product =
-        context.select((HomeStoreCubit cubit) => cubit.state.homeStoreData?.bestSeller[index]);
+    final product = context.select((HomeStoreCubit cubit) =>
+        cubit.loadedState.homeStoreData?.bestSeller[index]);
 
     return Stack(
       children: [
