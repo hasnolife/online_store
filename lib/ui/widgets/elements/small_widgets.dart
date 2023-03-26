@@ -88,13 +88,14 @@ class AppElevatedButtonWidget extends StatelessWidget {
   final double? radius;
   final void Function()? onPressed;
 
-  const AppElevatedButtonWidget({Key? key,
-    required this.backgroundColor,
-    required this.title,
-    this.width,
-    this.height,
-    this.radius,
-    this.onPressed})
+  const AppElevatedButtonWidget(
+      {Key? key,
+      required this.backgroundColor,
+      required this.title,
+      this.width,
+      this.height,
+      this.radius,
+      this.onPressed})
       : super(key: key);
 
   @override
@@ -167,14 +168,21 @@ class MyErrorWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                showDialog(context: context, builder: (BuildContext context){
-                  return AlertDialog(
-                   title: Text((error ?? kErrorWidgetNoDescription).toString()),
-                  );
-                });
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: AppColors.dark,
+                        title: Text(
+                          (error ?? kErrorWidgetNoDescription).toString(),
+                          style: AppTextStyles.headerTextStyle
+                              .copyWith(fontSize: 15, color: AppColors.white),
+                        ),
+                      );
+                    });
               },
-              child: Text((kErrorWidgetHeader),
-
+              child: Text(
+                (kErrorWidgetHeader),
                 style: AppTextStyles.headerCategoryTextStyle
                     .copyWith(fontSize: 20, color: AppColors.white)
                     .copyWith(color: AppColors.red),
