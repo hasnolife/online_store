@@ -1,15 +1,25 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'best_seller_entity.g.dart';
 
+part 'best_seller_entity.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BestSellerEntity {
   final int id;
-  bool isFavorites;
+  final bool isFavorites;
   final String title;
   final int priceWithoutDiscount;
   final int discountPrice;
-  String picture;
+  final String picture;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BestSellerEntity &&
+          runtimeType == other.runtimeType &&
+          isFavorites == other.isFavorites;
+
+  @override
+  int get hashCode => isFavorites.hashCode;
 
   BestSellerEntity({
     required this.id,
@@ -20,7 +30,21 @@ class BestSellerEntity {
     required this.picture,
   });
 
-  factory BestSellerEntity.fromJson(Map<String, dynamic> json) => _$BestSellerEntityFromJson(json);
+  factory BestSellerEntity.fromJson(Map<String, dynamic> json) =>
+      _$BestSellerEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$BestSellerEntityToJson(this);
+
+  BestSellerEntity copyWith({
+    bool? isFavorites,
+  }) {
+    return BestSellerEntity(
+      isFavorites: isFavorites ?? this.isFavorites,
+      id: id,
+      title: title,
+      priceWithoutDiscount: priceWithoutDiscount,
+      discountPrice: discountPrice,
+      picture: picture,
+    );
+  }
 }

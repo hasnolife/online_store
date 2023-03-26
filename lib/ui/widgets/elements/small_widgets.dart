@@ -147,7 +147,9 @@ class LoadWidget extends StatelessWidget {
 }
 
 class MyErrorWidget extends StatelessWidget {
-  const MyErrorWidget({Key? key}) : super(key: key);
+  final Object? error;
+
+  const MyErrorWidget({Key? key, this.error}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -164,11 +166,27 @@ class MyErrorWidget extends StatelessWidget {
               size: 120,
               color: AppColors.orange,
             ),
-            Text(
-              kErrorWidgetHeader,
-              style: AppTextStyles.headerCategoryTextStyle
-                  .copyWith(fontSize: 20, color: AppColors.white)
-                  .copyWith(color: AppColors.red),
+            TextButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: AppColors.dark,
+                        title: Text(
+                          (error ?? kErrorWidgetNoDescription).toString(),
+                          style: AppTextStyles.headerTextStyle
+                              .copyWith(fontSize: 15, color: AppColors.white),
+                        ),
+                      );
+                    });
+              },
+              child: Text(
+                (kErrorWidgetHeader),
+                style: AppTextStyles.headerCategoryTextStyle
+                    .copyWith(fontSize: 20, color: AppColors.white)
+                    .copyWith(color: AppColors.red),
+              ),
             ),
             Text(
               kErrorWidgetDescription,

@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_store/domain/blocs/cart_bloc/cart_bloc.dart';
 import 'package:online_store/domain/entity/cart.dart';
 import 'package:online_store/domain/resources/images.dart';
 import 'package:online_store/theme/app_colors.dart';
 import 'package:online_store/theme/text_consts.dart';
 import 'package:online_store/theme/text_styles.dart';
-import 'package:online_store/ui/widgets/cart/cart_model.dart';
 import 'package:online_store/ui/widgets/elements/methods.dart';
 import 'package:online_store/ui/widgets/elements/small_widgets.dart';
-import 'package:provider/provider.dart';
+
 
 class CartWidget extends StatelessWidget {
   const CartWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<CartModel>();
     return Scaffold(
-      body: FutureBuilder(
-        future: model.futureCartData,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (BuildContext context, CartState state) {
+          if (state is CartLoadedState) {
             return const CartScaffoldWidget();
-          } else if (snapshot.hasError) {
-            return const MyErrorWidget();
+          } else if (state is CartLoadingErrorState) {
+            return MyErrorWidget(error: state.error);
           }
           return const LoadWidget();
         },
@@ -131,8 +130,9 @@ class _CartInfoProductListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<CartModel>();
-    final basket = model.cartData.basket;
+    final bloc = context.read<CartBloc>();
+    final state = bloc.state as CartLoadedState;
+    final basket = state.cart.basket;
 
     return Expanded(
       child: Padding(
@@ -162,14 +162,15 @@ class _CartInfoProductCardWidget extends StatelessWidget {
         children: [
           buildProductImage(),
           buildTitlePrice(),
-          buildCount(),
-          buildTrashIcon(),
+          buildCount(context),
+          buildTrashIcon(context),
         ],
       ),
     );
   }
 
-  Widget buildTrashIcon() {
+  Widget buildTrashIcon(BuildContext context) {
+    final bloc = context.read<CartBloc>();
     return Container(
       margin: const EdgeInsets.only(left: 5),
       width: 30,
@@ -177,14 +178,15 @@ class _CartInfoProductCardWidget extends StatelessWidget {
         style: ButtonStyle(
           padding: MaterialStateProperty.all(EdgeInsets.zero),
         ),
-        onPressed: () {},
+        onPressed: () => bloc.add(CartDeleteCountEvent()),
         icon: Image.asset(AppImages.trash),
         color: AppColors.deleteCartIcon,
       ),
     );
   }
 
-  Container buildCount() {
+  Container buildCount(BuildContext context) {
+    final bloc = context.read<CartBloc>();
     return Container(
       width: 26,
       height: 68,
@@ -198,15 +200,16 @@ class _CartInfoProductCardWidget extends StatelessWidget {
           SizedBox(
             child: Text(
               '1',
-              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
+              style: AppTextStyles.headerCategoryTextStyle
+                  .copyWith(fontSize: 20, color: AppColors.white),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildCountButton('-', {}),
-              buildCountButton('+', {}),
+              buildCountButton('-', () => bloc.add(CartDecrementCountEvent())),
+              buildCountButton('+', () => bloc.add(CartIncrementCountEvent())),
             ],
           ),
         ],
@@ -214,10 +217,10 @@ class _CartInfoProductCardWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCountButton(String title, void onTap) {
+  Widget buildCountButton(String title, Function()? onTap) {
     return InkWell(
       borderRadius: BorderRadius.circular(26),
-      onTap: () => onTap,
+      onTap: onTap,
       child: Container(
         alignment: Alignment.topCenter,
         decoration: BoxDecoration(
@@ -227,7 +230,8 @@ class _CartInfoProductCardWidget extends StatelessWidget {
         width: 26,
         child: Text(
           title,
-          style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
+          style: AppTextStyles.headerCategoryTextStyle
+              .copyWith(fontSize: 20, color: AppColors.white),
         ),
       ),
     );
@@ -242,11 +246,13 @@ class _CartInfoProductCardWidget extends StatelessWidget {
           children: [
             Text(
               cartProduct.title,
-              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.white),
+              style: AppTextStyles.headerCategoryTextStyle
+                  .copyWith(fontSize: 20, color: AppColors.white),
             ),
             Text(
               '\$${cartProduct.price}.00',
-              style: AppTextStyles.headerCategoryTextStyle.copyWith(fontSize: 20, color: AppColors.red),
+              style: AppTextStyles.headerCategoryTextStyle
+                  .copyWith(fontSize: 20, color: AppColors.red),
             ),
           ],
         ),
@@ -275,8 +281,10 @@ class _CartInfoSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<CartModel>();
-    final cartData = model.cartData;
+    final bloc = context.read<CartBloc>();
+    final state = bloc.state as CartLoadedState;
+
+    final cartData = state.cart;
     final myMethods = MyMethods();
     return Container(
       height: 91,

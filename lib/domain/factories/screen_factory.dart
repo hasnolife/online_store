@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:online_store/ui/widgets/cart/cart_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_store/domain/blocs/cart_bloc/cart_bloc.dart';
+import 'package:online_store/domain/blocs/details_screen_cubit/details_screen_cubit.dart';
+import 'package:online_store/domain/blocs/home_store_cubit/home_store_cubit.dart';
 import 'package:online_store/ui/widgets/cart/cart_widget.dart';
-import 'package:online_store/ui/widgets/details_screen/details_screen_model.dart';
 import 'package:online_store/ui/widgets/details_screen/details_screen_widget.dart';
-import 'package:online_store/ui/widgets/home_store/home_store_model.dart';
 import 'package:online_store/ui/widgets/home_store/home_store_widget.dart';
-import 'package:provider/provider.dart';
 
 class ScreenFactory {
   Widget makeMainScreen() {
-    return ChangeNotifierProvider<HomeStoreModel>(
-      create: (_) => HomeStoreModel(),
+    return BlocProvider<HomeStoreCubit>(
+      create: (_) => HomeStoreCubit(),
       child: const HomeStoreWidget(),
     );
   }
 
   Widget makeDetailsScreen() {
-    return ChangeNotifierProvider<ProductDetailsScreenModel>(
-      create: (_) => ProductDetailsScreenModel(),
+    return BlocProvider<DetailsScreenCubit>(
+      create: (_) => DetailsScreenCubit(),
       child: const ProductDetailsScreenWidget(),
     );
   }
 
   Widget makeCartScreen() {
-    return ChangeNotifierProvider<CartModel>(
-      create: (_) => CartModel(),
+    return BlocProvider<CartBloc>(
+      create: (_) => CartBloc(),
       child: const CartWidget(),
     );
   }
