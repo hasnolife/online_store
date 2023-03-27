@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_store/domain/api_client/api_client.dart';
+import 'package:online_store/domain/api_client/cart_api_client.dart';
+import 'package:online_store/domain/api_client/home_store_api_client.dart';
 import 'package:online_store/domain/entity/best_seller_entity.dart';
 import 'package:online_store/domain/entity/cart.dart';
 import 'package:online_store/domain/entity/home_store_data.dart';
@@ -12,18 +13,22 @@ import 'package:online_store/ui/widgets/navigation/main_navigation.dart';
 part 'home_store_state.dart';
 
 class HomeStoreCubit extends Cubit<HomeStoreState> {
-  HomeStoreCubit() : super(HomeStoreInitialState()) {
+  HomeStoreCubit(
+    this._homeStoreApiClient,
+    this._cartApiClient, {
+    required this.myMethods,
+  }) : super(HomeStoreInitialState()) {
     _setup();
     _initial();
   }
 
-  final _apiClient = ApiClient();
-  final myMethods = MyMethods();
+  final HomeStoreApiClient _homeStoreApiClient;
+  final CartApiClient _cartApiClient;
+  final MyMethods myMethods;
 
   get loadedState => state as HomeStoreLoadedState;
 
   int get productCount => loadedState.cartData.basket.length ?? 0;
-
 
   void toggleFavorite(int index) {
     final product = loadedState.homeStoreData.bestSeller[index];
@@ -48,8 +53,8 @@ class HomeStoreCubit extends Cubit<HomeStoreState> {
 
   Future<void> _initial() async {
     try {
-      final homeStoreData = await _apiClient.getHomeStoreData();
-      final cartData = await _apiClient.getCartData();
+      final homeStoreData = await _homeStoreApiClient.getHomeStoreData();
+      final cartData = await _cartApiClient.getCartData();
       final newState = HomeStoreLoadedState(
         homeStoreData: homeStoreData,
         cartData: cartData,

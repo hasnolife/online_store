@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_store/domain/api_client/api_client.dart';
+import 'package:online_store/domain/api_client/details_screen_api_client.dart';
 import 'package:online_store/domain/entity/product_details.dart';
 
 part 'details_screen_state.dart';
 
 class DetailsScreenCubit extends Cubit<DetailsScreenState> {
-  DetailsScreenCubit() : super(DetailsScreenInitialState()) {
+  DetailsScreenCubit(this._detailsScreenApiClient) : super(DetailsScreenInitialState()) {
     _initial();
   }
 
-  final _apiClient = ApiClient();
+  final DetailsScreenApiClient _detailsScreenApiClient;
 
   DetailsScreenLoadedState get loadedState => state as DetailsScreenLoadedState;
 
@@ -54,7 +54,7 @@ class DetailsScreenCubit extends Cubit<DetailsScreenState> {
 
   Future<void> _initial() async {
     try {
-      final productDetails = await _apiClient.getProductDetailsData();
+      final productDetails = await _detailsScreenApiClient.getProductDetailsData();
 
       emit(DetailsScreenLoadedState(
         productDetails: productDetails,
